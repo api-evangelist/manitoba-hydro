@@ -1,0 +1,127 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  live service metadata captured 2026-07-27 plus a targeted search of
+  hydro.mb.ca (880-URL English sitemap, robots.txt, subdomain probes) for
+  versioning, deprecation, SLA and status pages
+summary: >-
+  There is no API lifecycle here to speak of, and that is the finding. Manitoba
+  Hydro publishes no API version policy, no deprecation policy, no sunset
+  signalling, no SLA, no changelog, and no status page. The surfaces this repo
+  catalogues are live map layers and static files that can be renamed, reshaped,
+  or withdrawn without notice — and one of them demonstrably already was.
+
+versioning:
+  scheme: none (platform version only)
+  current: null
+  docs: null
+  detail:
+  - surface: ArcGIS REST (hosted, services2.arcgis.com)
+    reported_version: '12'
+    field: currentVersion
+    note: >-
+      Esri platform release, not a Manitoba Hydro API version. No version
+      segment in the path, no version header, no negotiation.
+  - surface: ArcGIS REST (on-premise, maps.hydro.mb.ca)
+    reported_version: '10.91'
+    field: currentVersion
+    note: ArcGIS Server release. Lags the hosted platform by several major versions.
+  - surface: OGC WFS
+    reported_version: 2.0.0
+    field: version attribute on wfs:WFS_Capabilities / version query parameter
+    note: >-
+      The only formally versioned contract Manitoba Hydro exposes, and it is a
+      standard's version rather than the provider's.
+  - surface: KISTERS hydrological JSON
+    reported_version: null
+    note: Unversioned static files.
+  stability_note: >-
+    Service names, layer indexes and attribute names are the only identifiers a
+    consumer can bind to, and Manitoba Hydro has made no commitment to keep any
+    of them stable.
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  observed_silent_deprecation:
+  - surface: KISTERS hydrological JSON
+    old_path: https://www.hydro.mb.ca/hydrologicalData/data/
+    new_path: https://www.hydro.mb.ca/hydrologicalData/static/data/
+    evidence: >-
+      The older tree still returns HTTP 200 and still serves a 10.6 MB
+      stationdata.json for 154 stations, but its observation files are frozen at
+      February 2021 readings. The /static/ tree carries same-day readings for
+      169 stations. Nothing anywhere announces the move, marks the old tree
+      stale, or redirects.
+    consumer_impact: >-
+      A consumer who integrated against the older path five years ago is still
+      getting HTTP 200 and still getting data — five-year-old data. This is the
+      concrete cost of having no deprecation policy.
+  note: >-
+    No Sunset (RFC 8594) or Deprecation (RFC 9745) header was observed on any
+    response. No Deprecation pointer is asserted in apis.yml because no
+    deprecation policy exists to point at.
+
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No service level agreement, availability target, or support commitment is
+    published for any data surface. There is no developer support channel; the
+    only contact route is the general customer support line at
+    https://www.hydro.mb.ca/support/contact/, which exists to serve energy
+    customers, not API consumers.
+
+status_page: null
+status_page_note: >-
+  No status page exists. https://status.hydro.mb.ca/ does not resolve in DNS,
+  and no /status path was found in the 880-URL English sitemap. The public
+  outage map at https://www.hydro.mb.ca/outages/outage-map/ reports the status
+  of the ELECTRICITY GRID, not of the data services, and must not be mistaken
+  for a service status page — no StatusPage pointer is asserted for this
+  provider.
+
+change_log: null
+change_log_note: >-
+  No API or data changelog. Manitoba Hydro's news feed at
+  https://www.hydro.mb.ca/articles/ is corporate and customer communications and
+  has never carried a data or service change notice. No ChangeLog artifact
+  pointer is asserted.
+
+data_freshness:
+  outage_layers:
+    refresh_interval: 5 minutes
+    evidence: >-
+      Manitoba Hydro's own ArcGIS Online item description for the planned
+      outages layer states "This data is updated every 5 minutes."
+    freshness_field: DATA_LAST_UPDATE
+  hydrological:
+    refresh_interval: sub-hourly, unstated
+    evidence: >-
+      Water Level readings were timestamped the same day as capture
+      (2026-07-27 08:20 local on the first station returned).
+    disclaimer: >-
+      Manitoba Hydro states the readings are "preliminary and are being
+      transmitted automatically without verification or review for quality
+      assurance" and that it "does not warrant the quality, accuracy, or
+      completeness of any information."
+
+terms_and_licence:
+  api_terms: null
+  data_licence: null
+  evidence: >-
+    The ArcGIS Online items carry licenseInfo: null. No terms of use governs
+    reuse of the data. The site-wide terms at
+    https://www.hydro.mb.ca/terms-of-use/ address website use and copyright and
+    say nothing about data or API consumption.
+  risk: >-
+    Consumers are operating without a licence grant. The data is reachable, but
+    nothing has been published that permits redistribution.
+
+cross_links:
+  conventions: conventions/manitoba-hydro-conventions.yml
+  conformance: conformance/manitoba-hydro-conformance.yml
+  errors: errors/manitoba-hydro-problem-types.yml

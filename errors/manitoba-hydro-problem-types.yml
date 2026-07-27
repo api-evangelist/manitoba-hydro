@@ -1,0 +1,170 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  live error responses provoked against every Manitoba Hydro surface on
+  2026-07-27; no error reference is published by the provider
+format: vendor
+format_note: >-
+  RFC 9457 problem+json is NOT used anywhere. Two distinct error envelopes are
+  in play — an Esri ArcGIS JSON envelope and an OGC OWS 1.1 XML ExceptionReport
+  — plus plain HTML from the web server and its firewall.
+docs: null
+docs_note: >-
+  Manitoba Hydro publishes no error reference, no status-code table, and no
+  support channel for API consumers. Every entry below was reproduced live.
+
+critical_gotchas:
+- id: arcgis-200-on-error
+  severity: high
+  summary: >-
+    The ArcGIS surfaces return HTTP 200 for application errors. An invalid
+    field, an invalid layer id, an invalid service name and an unparseable
+    where-clause all came back as HTTP 200 with an {"error":{...}} JSON body.
+    Status-code-only error handling will silently treat failures as successes.
+  remediation: >-
+    After every ArcGIS request, check for the presence of a top-level "error"
+    key before reading "features". Do not branch on the HTTP status.
+- id: f5-request-rejected
+  severity: high
+  summary: >-
+    www.hydro.mb.ca sits behind an F5 web application firewall that answers
+    non-browser-looking requests with HTTP 200 and an HTML body titled
+    "Request Rejected" instead of the requested JSON.
+  remediation: >-
+    Send a realistic browser User-Agent and a Referer of
+    https://www.hydro.mb.ca/hydrologicalData/static/ when fetching the
+    hydrological JSON tree. Assert the response parses as JSON before using it;
+    an HTML body means the WAF intercepted the request, not that the file is
+    missing.
+
+envelopes:
+- id: arcgis-json
+  applies_to:
+  - manitoba-hydro:manitoba-hydro-current-power-outages
+  - manitoba-hydro:manitoba-hydro-planned-power-outages
+  - manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
+  media_type: application/json
+  shape: '{"error": {"code": <int>, "message": <string>, "details": [<string>, ...]}}'
+  sample_file: examples/manitoba-hydro-arcgis-error-response.json
+  note: >-
+    "code" is an Esri application code that mirrors HTTP semantics (400, 404,
+    498, 499) but is carried in the body, not the status line. "message" is
+    sometimes empty and the real explanation is the first element of "details".
+- id: ows-exception-report
+  applies_to:
+  - manitoba-hydro:manitoba-hydro-current-power-outages
+  - manitoba-hydro:manitoba-hydro-planned-power-outages
+  media_type: text/xml
+  shape: >-
+    <ExceptionReport version="2.0.0" xmlns="http://www.opengis.net/ows/1.1">
+    <Exception exceptionCode="..."><ExceptionText>...</ExceptionText></Exception>
+    </ExceptionReport>
+  note: >-
+    The OGC WFS endpoints DO set a real HTTP status (400 observed) alongside the
+    XML report. This is the better-behaved of the two surfaces.
+- id: html
+  applies_to:
+  - manitoba-hydro:manitoba-hydro-hydrological-data
+  media_type: text/html
+  note: >-
+    The static hydrological tree is served by a plain web server. A missing file
+    returns a genuine HTTP 404 with an Apache-style HTML body. The F5 firewall
+    interception described above also arrives as HTML but with HTTP 200.
+
+problems:
+- id: arcgis-invalid-field
+  envelope: arcgis-json
+  http_status: 200
+  code: 400
+  title: Cannot perform query. Invalid query parameters.
+  detail: "'Invalid field: BOGUSFIELD' parameter is invalid"
+  cause: outFields or where names an attribute that does not exist on the layer.
+  remediation: >-
+    Read the layer's field list from the layer metadata (?f=json) before
+    building a query. The captured field lists are in
+    examples/manitoba-hydro-*-layer-metadata.json and modelled in
+    json-schema/.
+  reproduced: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0/query?where=BOGUSFIELD%3D1&f=json
+- id: arcgis-invalid-where
+  envelope: arcgis-json
+  http_status: 200
+  code: 400
+  title: Cannot perform query. Invalid query parameters.
+  detail: Unable to perform query. Please check your parameters.
+  cause: The where clause is not a valid SQL-92 predicate.
+  remediation: Use where=1=1 for an unfiltered query; quote string literals with single quotes.
+  reproduced: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0/query?where=%27%27&f=json
+- id: arcgis-layer-not-found
+  envelope: arcgis-json
+  http_status: 200
+  code: 400
+  title: ''
+  detail: 'The requested layer (layerId: 99) was not found.'
+  cause: Layer index does not exist on the service. Both outage services expose layer 0 only.
+  remediation: Enumerate layers from the FeatureServer root metadata before addressing one.
+  reproduced: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/99?f=json
+- id: arcgis-invalid-url
+  envelope: arcgis-json
+  http_status: 200
+  code: 400
+  title: Invalid URL
+  detail: Invalid URL
+  cause: Service name does not exist in the ArcGIS Online organization.
+  remediation: >-
+    Resolve service names through the org's public item search
+    (https://www.arcgis.com/sharing/rest/search?q=orgid:QoeQkfdOG126FqSi) rather
+    than guessing.
+  reproduced: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Nope_Service/FeatureServer?f=json
+- id: arcgis-service-not-found
+  envelope: arcgis-json
+  http_status: 200
+  code: 404
+  title: Service not found
+  detail: 'Service ReferenceData/Nope/MapServer not found '
+  cause: Unknown service path on the on-premise ArcGIS Server at maps.hydro.mb.ca.
+  remediation: >-
+    Enumerate the folder tree from https://maps.hydro.mb.ca/arcgis/rest/services?f=json.
+    Most folders are empty to an anonymous caller; only
+    ReferenceData/MH_AdminBoundaries is fully readable.
+  reproduced: https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/Nope/FeatureServer?f=json
+- id: wfs-invalid-parameter-value
+  envelope: ows-exception-report
+  http_status: 400
+  code: InvalidParameterValue
+  title: InvalidParameterValue
+  detail: "TypeName has invalid value 'nope'."
+  cause: typeNames does not match a feature type advertised in GetCapabilities.
+  remediation: >-
+    Read the FeatureTypeList from the saved capabilities documents in wfs/ or
+    from a live GetCapabilities request.
+  reproduced: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Current_Power_Outages_WFS/WFSServer?service=wfs&request=GetFeature&typeNames=nope&version=2.0.0
+- id: maps-host-root-forbidden
+  envelope: html
+  http_status: 403
+  title: 'Forbidden: Access is denied.'
+  cause: >-
+    The IIS host root of maps.hydro.mb.ca is closed. Only the
+    /arcgis/rest/services tree responds.
+  remediation: Always address maps.hydro.mb.ca/arcgis/rest/services/... directly.
+  reproduced: https://maps.hydro.mb.ca/
+- id: hydrological-file-not-found
+  envelope: html
+  http_status: 404
+  title: Not Found
+  cause: The requested parameter file id does not exist in the static tree.
+  remediation: >-
+    Resolve valid parameter ids from
+    https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json (15
+    parameters at capture time) rather than guessing file names.
+  reproduced: https://www.hydro.mb.ca/hydrologicalData/static/data/999.json
+- id: waf-request-rejected
+  envelope: html
+  http_status: 200
+  title: Request Rejected
+  cause: F5 web application firewall on www.hydro.mb.ca blocked a non-browser request.
+  remediation: See critical_gotchas/f5-request-rejected.
+  reproduced: https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json (without browser headers)
+
+cross_links:
+  conventions: conventions/manitoba-hydro-conventions.yml
+  examples: examples/

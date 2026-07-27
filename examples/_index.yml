@@ -1,0 +1,90 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  live anonymous requests against Manitoba Hydro's published surfaces on
+  2026-07-27; every file in this directory is a verbatim response body, not a
+  constructed sample
+note: >-
+  Manitoba Hydro publishes no API documentation and therefore no examples. These
+  captures exist so a consumer can see the real shape of each surface — the
+  self-describing service metadata, a real query response, and a real error —
+  without having to discover the endpoints first. Values are a point-in-time
+  snapshot and will not match a live call.
+
+examples:
+- file: manitoba-hydro-current-power-outages-layer-metadata.json
+  api: manitoba-hydro:manitoba-hydro-current-power-outages
+  kind: service-metadata
+  request: GET https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0?f=json
+  status: 200
+  describes: >-
+    Layer 0 "MH Current Power Outages". Carries the full field list (15
+    attributes), maxRecordCount 2000, supportedQueryFormats "JSON, geoJSON,
+    PBF", advancedQueryCapabilities (pagination, statistics, orderBy, distinct,
+    SQL expressions), and the EPSG:26914 spatial reference. This is the closest
+    thing to a contract the outage surface has.
+- file: manitoba-hydro-planned-power-outages-layer-metadata.json
+  api: manitoba-hydro:manitoba-hydro-planned-power-outages
+  kind: service-metadata
+  request: GET https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Planned_Power_Outages/FeatureServer/0?f=json
+  status: 200
+  describes: Layer 0 "MH Planned Power Outages", 17 attributes, same capability profile.
+- file: manitoba-hydro-current-power-outages-query-response.json
+  api: manitoba-hydro:manitoba-hydro-current-power-outages
+  kind: query-response
+  request: GET .../FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=3&f=json
+  status: 200
+  captured: '2026-07-27'
+  describes: >-
+    Three live unplanned outages, attributes only. Shows the epoch-millisecond
+    date encoding (TIME_OF_OUTAGE, ETR, DATA_LAST_UPDATE), the banded
+    NUM_CUST_NOPOWERTXT string alongside the integer NUM_CUST_NOPOWER, and the
+    exceededTransferLimit paging flag.
+- file: manitoba-hydro-planned-power-outages-query-response.json
+  api: manitoba-hydro:manitoba-hydro-planned-power-outages
+  kind: query-response
+  request: GET .../FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=3&f=json
+  status: 200
+  captured: '2026-07-27'
+  describes: >-
+    Three scheduled outage orders. Shows the ORDER_ID / ORDER_TYPE /
+    ORDER_STATUS_DESCRIPTION vocabulary, the scheduled start and end window, the
+    DEVICE asset reference, and the space-padded DEVICE_ADDRESS quirk.
+- file: manitoba-hydro-arcgis-error-response.json
+  api: manitoba-hydro:manitoba-hydro-current-power-outages
+  kind: error-response
+  request: GET .../FeatureServer/0/query?where=BOGUSFIELD%3D1&f=json
+  status: 200
+  describes: >-
+    The single most important example in this directory. An invalid field
+    produces an {"error":{"code":400,...}} body returned with HTTP 200 — status
+    codes cannot be trusted on this surface. See
+    errors/manitoba-hydro-problem-types.yml.
+- file: manitoba-hydro-hydrological-parameter-index.json
+  api: manitoba-hydro:manitoba-hydro-hydrological-data
+  kind: index
+  request: GET https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json
+  status: 200
+  captured: '2026-07-27'
+  describes: >-
+    The parameter index for the KISTERS hydrological application — 15 monitored
+    parameters, each with a pid, a name, the observation file name
+    (url.JSON = "<pid>.json"), and the threshold classification bands with live
+    station counts per band. Fetching this file requires a browser User-Agent
+    and a Referer of https://www.hydro.mb.ca/hydrologicalData/static/.
+
+not_captured:
+- what: MH_AdminBoundaries query response
+  reason: >-
+    The response embeds internal Manitoba Hydro staff usernames in inserted_by
+    and updated_by. The field list is modelled in
+    json-schema/manitoba-hydro-customer-service-centres.schema.json instead; no
+    live values are stored here.
+- what: stationdata.json
+  reason: 855 KB of station metadata; the shape is modelled in json-schema/ instead.
+
+cross_links:
+  json_schema: json-schema/
+  errors: errors/manitoba-hydro-problem-types.yml
+  conventions: conventions/manitoba-hydro-conventions.yml
+  wfs: wfs/

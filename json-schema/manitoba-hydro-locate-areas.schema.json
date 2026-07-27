@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/json-schema/manitoba-hydro-locate-areas.schema.json",
+  "title": "Manitoba Hydro \u2014 MH Locate Areas (feature attributes)",
+  "description": "Attribute schema for a single feature returned by layer 1 of the MH_AdminBoundaries feature service. Note that inserted_by and updated_by carry internal staff usernames; do not republish those values.",
+  "x-apievangelist": {
+    "generated": "2026-07-27",
+    "method": "derived",
+    "source": "https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/1?f=json",
+    "note": "Derived from the live Esri layer metadata (?f=json) captured 2026-07-27. Manitoba Hydro publishes no schema for this layer; this document models the attributes block of a query response feature."
+  },
+  "type": "object",
+  "properties": {
+    "id": {
+      "title": "id",
+      "description": "ArcGIS field type esriFieldTypeInteger.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "description": {
+      "title": "description",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 41
+    },
+    "inserted_by": {
+      "title": "inserted_by",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 11
+    },
+    "date_inserted": {
+      "title": "date_inserted",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "updated_by": {
+      "title": "updated_by",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 11
+    },
+    "date_updated": {
+      "title": "date_updated",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "service_grids": {
+      "title": "service_grids",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255
+    },
+    "fme_db_operation": {
+      "title": "fme_db_operation",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 10
+    },
+    "OBJECTID": {
+      "title": "OBJECTID",
+      "description": "ArcGIS field type esriFieldTypeOID.",
+      "type": "integer"
+    },
+    "LOCA_NAME": {
+      "title": "LOCA_NAME",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 6
+    }
+  },
+  "required": [
+    "OBJECTID"
+  ],
+  "additionalProperties": false
+}

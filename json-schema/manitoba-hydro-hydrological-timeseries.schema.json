@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/json-schema/manitoba-hydro-hydrological-timeseries.schema.json",
+  "title": "Manitoba Hydro — hydrological parameter observation file (KISTERS WISKI Web Public)",
+  "description": "Structure of a per-parameter observation file under https://www.hydro.mb.ca/hydrologicalData/static/data/<pid>.json — for example 1.json (Water Level, 158 stations at capture). Manitoba Hydro publishes no schema for these files; this document models the shape observed live on 2026-07-27. Observation records use POSITIONAL attribute keys \"0\"..\"7\" whose meaning is declared by the sibling fields[] array in the same document, and every value arrives as an HTML fragment that must be unwrapped.",
+  "x-apievangelist": {
+    "generated": "2026-07-27",
+    "method": "derived",
+    "source": "https://www.hydro.mb.ca/hydrologicalData/static/data/1.json",
+    "note": "Derived by inspecting the live document. Fetching it requires a browser User-Agent and a Referer of https://www.hydro.mb.ca/hydrologicalData/static/ or the F5 web application firewall answers HTTP 200 with a 'Request Rejected' HTML page."
+  },
+  "type": "object",
+  "required": ["id", "fields", "features"],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Snapshot identifier for this rendering of the parameter. Changes on each refresh; it is not a stable parameter id. The stable parameter id is the pid from tsdata.json, which is also the file name."
+    },
+    "fields": {
+      "type": "array",
+      "description": "Column declaration for the positional attribute keys used in features[].attributes. Observed order: 0 Station name, 1 Station number, 2 Parameter name, 3 Date / Time, 4 Value, 5 Unit, 6 Classification (text), 7 Classification (symbol).",
+      "items": {
+        "type": "object",
+        "required": ["name", "alias"],
+        "properties": {
+          "name": { "type": "integer", "description": "Positional key, matching a string key in features[].attributes." },
+          "style": { "type": "integer", "description": "KISTERS presentation style index." },
+          "alias": { "type": "string", "description": "Human label for the column." }
+        }
+      }
+    },
+    "classification": {
+      "type": "array",
+      "description": "Threshold banding used to colour the map. Each class carries from/to bounds, a title such as 'Above Threshold' / 'Working' / 'Below Threshold' / 'No Value', a symbol colour and a live count of stations currently in that band.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "classcount": { "type": "integer" },
+          "segment": { "type": "integer" },
+          "type": { "type": "string" },
+          "label": { "type": "string" },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": { "type": ["string", "integer"] },
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "title": { "type": "string" },
+                "symbolcolor": { "type": "string" },
+                "symboltype": { "type": "string" },
+                "symbolsize": { "type": "integer" },
+                "count": { "type": "integer", "description": "Number of stations currently in this band." },
+                "classno": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "description": { "type": "string", "description": "Free-text description of the parameter rendering." },
+    "text": { "type": "string", "description": "Free-text caption supplied by the KISTERS application." },
+    "features": {
+      "type": "array",
+      "description": "One record per reporting station for this parameter.",
+      "items": {
+        "type": "object",
+        "required": ["attributes"],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "description": "Positional attributes. Every value is an HTML fragment, not a clean scalar.",
+            "properties": {
+              "symbol": { "type": "string", "description": "Relative path to the classification marker image, e.g. symbols/4169e1_type2_size10.png." },
+              "0": { "type": "string", "description": "Station name, wrapped in an <a class=\"link statlink\" station_name=\"...\" onclick=onExecute(<internalStationId>,\"showstation\")> element. Both the display name and the internal station id must be parsed out of the markup." },
+              "1": { "type": "string", "description": "Station number — the join key to stationdata.json. Water Survey of Canada style, e.g. 05UF706. This is the one field that arrives as a plain string." },
+              "2": { "type": "string", "description": "Parameter short code, e.g. HG for water level (gauge height)." },
+              "3": { "type": "string", "description": "Observation timestamp. Arrives as <sort d='YYYYMMDDHHMMSS'/> followed by a display string 'YYYY-MM-DD  HH:MM:SS' in local time. Parse the sort attribute; the display text has double spacing and no timezone." },
+              "4": { "type": "string", "description": "Observed value. Arrives as <sort v='168.08'/> followed by a formatted display value '168.080'. Parse the sort attribute for the machine value. Empty when the station reported no value." },
+              "5": { "type": "string", "description": "Unit of measure, e.g. metre, degree Celsius, mm, km/h, %, hPa." },
+              "6": { "type": "string", "description": "Classification title matching one of the classification bands, e.g. 'Working', 'Above Threshold', 'Below Threshold', 'No Value'." },
+              "7": { "type": "string", "description": "Classification swatch as an inline-styled <span> element. Presentation only." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

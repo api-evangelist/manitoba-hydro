@@ -1,0 +1,40 @@
+             GAeeeAJ
+             SAeeeAT
+             GAeeeAJ
+             SAeeeAT
+          .:+oeeeeeo+:.             =====.      .=====                           ====  =====               ====
+       =lLaZVeeeeeeeVZaLI-         .aeVeez     .oeeVeJ                                 DiljT               leea
+     iTZAAeeeeeeeeeeeeeAAZTi       :ueVueei    vAeueAT  :=*rIIr*-  .+++.:*rri+:  :***.=rVAZi*+   .::::.    lAea*rIri=.   .=*irIr*=
+   *seAeeeeAeVeeeeeVeAeeeeAes+     -ZeZrZAn-  iVATtAAT  zasJJJaeZL.=VeVJuZZeAeuI reeZ-JZeeVuu :taeVnaueuJ+ IAeVunnueVal. lnoTJJoeVs-
+  lVAeeeeeoj*oeeeees*toeeeeeAVl    =VeZ:jAAJ :nAZ-jAAT      :=veeV-=Veenr-:=LeAu.ieeZ- ieeu  :TAAJ=*+:IVAZ+IAes:..:iuAAl     .=lVeAr
+ leeeeeAai   sAeeeAT  .raAeeeeeI   *eeu:.oAeILAeI lAes :IzonnnoVeZ-=Vee*    ieeu.*eeZ: ieeu  =eeV=     TAAzIAAJ     vAAs.ivsnnnoZeer
+=Zeeeees:    seeeeAT    :oeeeeeZ-  reen. +VeVeAJ  lAea:aAAz*-.-ZeZ:+VeZ-    ieen.ieeZ- ieeu  .nAej     nAAIlAeu=   :sAAvJAATi-..aeei
+vAAAAAV=     oAAAAEs     +eAAAAEt  tEAu.  vAAAu-  lEAu:oAezIIi=eAV:iAAZ-    lAAu IAAV- +VAAoJL+seAaLvJZAZt.tEAZuTzLuAeJ:JAATIII:uAA*
+Ttttttl      Ittttvr     .lttttvD  iGGG.  :jtv*   +vtj.:IvJJJi:ttj.=ttj:    *vtj.+vtt:  *vLJLj  +lzJTJvr-  ivvi=tLTLj+  .ivJJJl.JJJ=
+
+                                   =====      =====                    =====
+                                   tAAV-      rAAAi                    :uAAi
+                                   tAAV-      rAAAi...       ...   .::::uAAi ...  .:.   .:::.
+                                   jAeZ:      ieee+lnnz    .Jnni:lTnuuuuVee* vnavJuVj=vouuuunJr.
+                                   jAeVaaaaaaaneee+:aAeI   tAAL*uAeJI*+iZee+ LAeesjILVAZj*+rJAAs-
+                                   jAeVvttttttJeee+ =ZAZ= *VAs:nAej    .ueV+ zAeT  -Zee*     sAAv
+                                   tAeu.      ieee+  reAT-nAn-:Zeei    +VeV+ zAAt  -Zeei     sAAz
+                                   zAAZ:      IAee*   tAVaAV*  teAuj**lneAe* JAAt   lVAZti*rTAAo-
+                                   tTTT:      rnaa*    JAeeI    iJnZunsILaa+ vnnj    =tsAGGuDDD.
+                                   tTTT:      rnaa*   :sAAv       JnZu   AA  vnnj      +lzDDDv                        :=-:                  .::  ==   :==:.
+                                                  :TJTuAVz.                                                         :LTvzl                  +nl     .tsvvt:
+                                                  .lzzvl+       -++-  .=.=+=.    -++-  .=:=+=. .=+=--.=-    :=.    -vZI=. :+*=.   -::++:    ju+ :- :rZv=:  -++:
+                                                              +LLlloj lnzjtoJ: +LLlloj lnLtvz-lsLtznv.Ln+  +az.   .laojj-jsztLsi :oottLI   .To..Jo.*sntt+iJzltaI
+                                                             =nz *lTr Ja=  vu-=nz *lTr Ja=   lZI  iZr =nJ +nz.     -nv  tu*   oo *uv.      -nz -nz .ss  *uj ijJ*
+                                                             +uz+i*- -nL  .so.=uz+i*= -nL    vZi:-Ln-  julav.      IZi  tur::Inj tZ+       IZr IZr =uv  rZj+i*-
+                                                              *TTTtl +Ji  :Ll  *zzttl +Ji    :jLvvnJ   .oZv.       Ln-  :lLzzvi  tz.       lL- lL- lZi  .rLDDDr
+                                                                ==               ==         -r= +ta* -+jol        :aJ      ==                     .Ja:     ==
+                                                                                            =tzzzt= .vLt=         :I+                             .ri
+
+
+
+Contact: mailto:website-security@hydro.mb.ca
+Preferred-Languages: en, fr
+Canonical: https://www.hydro.mb.ca/.well-known/security.txt
+Hiring: https://www.hydro.mb.ca/careers/
+Expires: 2026-12-31T23:59:00.000Z

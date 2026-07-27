@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/json-schema/manitoba-hydro-planned-power-outages.schema.json",
+  "title": "Manitoba Hydro \u2014 MH Planned Power Outages (feature attributes)",
+  "description": "Attribute schema for a single feature returned by the Manitoba Hydro Planned Power Outages feature layer. Geometry is an esriGeometryPolygon in EPSG:26914 (NAD83 / UTM zone 14N) unless outSR is supplied.",
+  "x-apievangelist": {
+    "generated": "2026-07-27",
+    "method": "derived",
+    "source": "https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Planned_Power_Outages/FeatureServer/0?f=json",
+    "note": "Derived from the live Esri layer metadata (?f=json) captured 2026-07-27. Manitoba Hydro publishes no schema for this layer; this document models the attributes block of a query response feature."
+  },
+  "type": "object",
+  "properties": {
+    "OBJECTID": {
+      "title": "OBJECTID",
+      "description": "ArcGIS field type esriFieldTypeOID.",
+      "type": "integer"
+    },
+    "ORDER_ID": {
+      "title": "Order ID",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": "string",
+      "maxLength": 24
+    },
+    "ORDER_LAST_UPDATED": {
+      "title": "Order Last Updated",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "ORDER_STATUS_DESCRIPTION": {
+      "title": "Order Status Description",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "ORDER_CAUSE": {
+      "title": "Order Cause",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50
+    },
+    "ORDER_TYPE": {
+      "title": "Order Type",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": "string",
+      "maxLength": 25
+    },
+    "ORDER_DESCRIPTION": {
+      "title": "Order Description",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "SPECIAL": {
+      "title": "Special",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50
+    },
+    "DEVICE": {
+      "title": "Device",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 250
+    },
+    "DEVICE_ADDRESS": {
+      "title": "Device Address",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 250
+    },
+    "CSC": {
+      "title": "CSC",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50
+    },
+    "SCHEDULED_START_TIME": {
+      "title": "Scheduled Start Time",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "SCHEDULED_END_TIME": {
+      "title": "Scheduled End Time",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "DATA_LAST_UPDATE": {
+      "title": "Data Last Updated",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "NUM_CUST_NOPOWERTXT": {
+      "title": "Customers without power",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 25
+    },
+    "Shape__Area": {
+      "title": "Shape__Area",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "Shape__Length": {
+      "title": "Shape__Length",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "OBJECTID",
+    "ORDER_ID",
+    "ORDER_TYPE"
+  ],
+  "additionalProperties": false
+}

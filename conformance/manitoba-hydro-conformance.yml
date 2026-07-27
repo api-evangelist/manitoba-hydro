@@ -1,0 +1,160 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  live capability documents captured 2026-07-27 (wfs/ GetCapabilities + XSD,
+  examples/ ArcGIS layer metadata, well-known/manitoba-hydro-security.txt) plus
+  the negative findings recorded in review.yml
+summary: >-
+  Manitoba Hydro conforms to exactly two machine-readable contracts, and neither
+  of them is an energy standard: OGC WFS 2.0.0 (with its GML 3.2 / XML Schema
+  companions) and the Esri ArcGIS REST convention, both of which arrive for free
+  with the ArcGIS platform it publishes maps on. It conforms to RFC 9116 for
+  security.txt. It conforms to nothing in the API-description, API-error,
+  identity, or consumer-energy-data families. There is no published compliance
+  or certification programme, so no Compliance pointer is asserted.
+
+standards:
+- id: ogc-wfs-2.0.0
+  name: OGC Web Feature Service 2.0.0
+  conforms: true
+  evidence: >-
+    wfs:WFS_Capabilities version="2.0.0" retrieved anonymously from both
+    Manitoba_Hydro_Current_Power_Outages_WFS and
+    Manitoba_Hydro_Planned_Power_Outages_WFS; saved verbatim to
+    wfs/manitoba-hydro-current-power-outages-wfs-capabilities.xml and
+    wfs/manitoba-hydro-planned-power-outages-wfs-capabilities.xml
+  spec: https://www.ogc.org/standards/wfs/
+- id: ogc-ows-1.1-exceptions
+  name: OGC Web Services Common 1.1 ExceptionReport
+  conforms: true
+  evidence: >-
+    An invalid typeNames request returned an ows/1.1 ExceptionReport with
+    exceptionCode InvalidParameterValue and HTTP 400; captured in
+    errors/manitoba-hydro-problem-types.yml
+- id: gml-3.2
+  name: OGC Geography Markup Language 3.2
+  conforms: true
+  evidence: >-
+    The WFS DescribeFeatureType schemas import
+    http://www.opengis.net/gml/3.2 and type the geometry property against it;
+    saved to wfs/manitoba-hydro-*-describefeaturetype.xsd
+- id: w3c-xml-schema
+  name: W3C XML Schema (XSD 1.0)
+  conforms: true
+  evidence: DescribeFeatureType returns a well-formed xsd:schema for each feature type.
+- id: geojson-rfc7946
+  name: GeoJSON (RFC 7946)
+  conforms: partial
+  evidence: >-
+    Both outage layers advertise supportedQueryFormats "JSON, geoJSON, PBF" and
+    the service advertises geojson among supportedExportFormats, so f=geojson is
+    available. Esri's geoJSON output is RFC 7946-shaped but the default and
+    native representation is Esri JSON in EPSG:26914, not WGS84 — pass
+    outSR=4326 for RFC 7946 coordinate order and datum expectations.
+- id: esri-arcgis-rest
+  name: Esri ArcGIS REST API (Feature Service)
+  conforms: true
+  standard_type: vendor convention, not an open standard
+  evidence: >-
+    Hosted feature services report currentVersion 12; the on-premise directory
+    at maps.hydro.mb.ca reports ArcGIS Server 10.91. Service and layer metadata
+    are self-describing via ?f=json and were captured to examples/.
+- id: rfc9116-security-txt
+  name: RFC 9116 security.txt
+  conforms: true
+  evidence: >-
+    https://www.hydro.mb.ca/.well-known/security.txt returns HTTP 200 with
+    Contact, Preferred-Languages, Canonical, Hiring and a non-expired Expires
+    field (2026-12-31T23:59:00.000Z). Saved verbatim to
+    well-known/manitoba-hydro-security.txt.
+- id: openapi
+  name: OpenAPI / Swagger
+  conforms: false
+  evidence: >-
+    /openapi.json, /swagger.json and /api-docs return HTTP 404 on
+    www.hydro.mb.ca and account.hydro.mb.ca; no spec exists on maps.hydro.mb.ca
+    or in any ArcGIS Online item. No openapi/ directory was created.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: >-
+    No event, streaming, or webhook surface of any kind. Outage data is polled,
+    not pushed; there is no subscription mechanism.
+- id: graphql
+  name: GraphQL
+  conforms: false
+  evidence: No /graphql surface on any host.
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    Errors use the Esri JSON envelope (returned with HTTP 200) and OGC
+    ExceptionReport XML. No application/problem+json anywhere.
+- id: rfc9727-api-catalog
+  name: RFC 9727 api-catalog well-known URI
+  conforms: false
+  evidence: /.well-known/api-catalog returned HTTP 404 on all three hydro.mb.ca hosts.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: >-
+    No authorization server, no token endpoint, no scopes.
+    /.well-known/oauth-authorization-server returned HTTP 404 on
+    www.hydro.mb.ca and account.hydro.mb.ca.
+- id: openid-connect
+  name: OpenID Connect
+  conforms: false
+  evidence: /.well-known/openid-configuration returned HTTP 404 on both hosts.
+- id: green-button-espi
+  name: Green Button / NAESB REQ.21 ESPI
+  conforms: false
+  evidence: >-
+    The Green Button Alliance Canadian Initiatives page states it has "no
+    information about Green Button deployments in Manitoba". No Green Button,
+    ESPI, Download My Data or Connect My Data reference exists on hydro.mb.ca;
+    https://www.hydro.mb.ca/green-button/ returns HTTP 404.
+- id: cdr-energy
+  name: Australian Consumer Data Right (energy sector)
+  conforms: false
+  evidence: Australian law; no Canadian equivalent for energy exists.
+- id: iec-cim-61968
+  name: IEC 61968 / 61970 Common Information Model
+  conforms: false
+  evidence: >-
+    No CIM reference in any published Manitoba Hydro material or in the
+    attribute naming of the published layers.
+- id: ieee-2030.5
+  name: IEEE 2030.5 (Smart Energy Profile 2.0)
+  conforms: false
+  evidence: No DER or smart-energy interface published.
+- id: openadr
+  name: OpenADR
+  conforms: false
+  evidence: No demand-response programme interface published.
+- id: ocpp-ocpi
+  name: OCPP / OCPI (EV charging)
+  conforms: false
+  evidence: >-
+    No EV charging network operated or exposed; the probed EV pages returned
+    HTTP 404.
+- id: ogc-api-features
+  name: OGC API - Features (the modern successor to WFS)
+  conforms: false
+  evidence: >-
+    Only the legacy WFS 2.0.0 profile is published. No /collections landing page
+    was found on the dservices2 endpoints.
+
+certifications_published: none
+certifications_note: >-
+  No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP, or CSA STAR claim is published
+  anywhere on hydro.mb.ca, and no trust centre exists — the trust-centre probe
+  returned no verified hit. Manitoba Hydro is subject to Manitoba's Freedom of
+  Information and Protection of Privacy Act (FIPPA), which the corporate site
+  links to, but that is a statutory regime it operates under rather than a
+  certification it holds. No Compliance pointer is asserted for this provider.
+
+cross_links:
+  authentication: authentication/manitoba-hydro-authentication.yml
+  errors: errors/manitoba-hydro-problem-types.yml
+  security: security/manitoba-hydro-domain-security.yml
+  well_known: well-known/manitoba-hydro-well-known.yml

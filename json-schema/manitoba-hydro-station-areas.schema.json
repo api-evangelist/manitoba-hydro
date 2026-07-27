@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/json-schema/manitoba-hydro-station-areas.schema.json",
+  "title": "Manitoba Hydro \u2014 MH Station Areas (feature attributes)",
+  "description": "Attribute schema for a single feature returned by layer 2 of the MH_AdminBoundaries feature service.",
+  "x-apievangelist": {
+    "generated": "2026-07-27",
+    "method": "derived",
+    "source": "https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/2?f=json",
+    "note": "Derived from the live Esri layer metadata (?f=json) captured 2026-07-27. Manitoba Hydro publishes no schema for this layer; this document models the attributes block of a query response feature."
+  },
+  "type": "object",
+  "properties": {
+    "OBJECTID": {
+      "title": "OBJECTID",
+      "description": "ArcGIS field type esriFieldTypeOID.",
+      "type": "integer"
+    },
+    "STATE": {
+      "title": "STATE",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 128
+    },
+    "NAME": {
+      "title": "NAME",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 25
+    },
+    "NUMBER": {
+      "title": "NUMBER",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "OWNER": {
+      "title": "OWNER",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 128
+    },
+    "CSC_NUMBER": {
+      "title": "CSC_NUMBER",
+      "description": "ArcGIS field type esriFieldTypeInteger.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "OBJECTID"
+  ],
+  "additionalProperties": false
+}

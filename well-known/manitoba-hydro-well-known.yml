@@ -1,0 +1,70 @@
+generated: '2026-07-27'
+method: searched
+source: live HTTPS probes of every apis.yml host on 2026-07-27
+summary: >-
+  Manitoba Hydro publishes exactly one /.well-known/ document — a valid RFC 9116
+  security.txt on the corporate website. No OIDC discovery, no OAuth
+  authorization-server metadata, no RFC 9727 api-catalog, and no ai-plugin.json
+  is served on any host. The two ArcGIS hosts that actually carry the open data
+  (services2.arcgis.com, dservices2.arcgis.com) are Esri infrastructure, not
+  Manitoba Hydro infrastructure, and answer /.well-known/ requests with HTTP 403.
+hosts:
+- host: https://www.hydro.mb.ca
+  role: corporate website + hydrological data host
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: manitoba-hydro-security.txt
+    note: >-
+      RFC 9116. Contact mailto:website-security@hydro.mb.ca, Preferred-Languages
+      "en, fr", Canonical, Hiring, Expires 2026-12-31T23:59:00.000Z. The record
+      is wrapped in a large ASCII-art Manitoba Hydro banner; the directives
+      themselves parse cleanly.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://maps.hydro.mb.ca
+  role: on-domain ArcGIS Server 10.91 REST directory
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://account.hydro.mb.ca
+  role: customer self-service portal (Smart Energy Water Smart Customer Mobile)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://services2.arcgis.com
+  role: Esri-hosted feature services for the Manitoba Hydro ArcGIS Online org (QoeQkfdOG126FqSi)
+  third_party: true
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    note: Esri platform host; not under Manitoba Hydro control.
+- host: https://dservices2.arcgis.com
+  role: Esri-hosted OGC WFS 2.0.0 endpoints for the same org
+  third_party: true
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    note: Esri platform host; not under Manitoba Hydro control.

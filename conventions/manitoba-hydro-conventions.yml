@@ -1,0 +1,208 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  live ArcGIS REST service and layer metadata (?f=json) captured 2026-07-27 into
+  examples/, the OGC WFS 2.0.0 GetCapabilities documents in wfs/, and observed
+  responses from the KISTERS hydrological JSON tree
+docs: null
+docs_note: >-
+  Manitoba Hydro documents none of this. Every convention below was read off the
+  live service metadata that the hosting platforms (Esri ArcGIS and KISTERS
+  WISKI Web Public) generate. The conventions are therefore the platforms'
+  conventions, not conventions Manitoba Hydro authored or committed to.
+surfaces:
+- id: arcgis-rest
+  label: Esri ArcGIS REST Feature Service (hosted + on-premise)
+  hosts:
+  - services2.arcgis.com/QoeQkfdOG126FqSi
+  - maps.hydro.mb.ca/arcgis
+- id: ogc-wfs
+  label: OGC Web Feature Service 2.0.0
+  hosts:
+  - dservices2.arcgis.com/QoeQkfdOG126FqSi
+- id: kisters-json
+  label: KISTERS WISKI Web Public static JSON
+  hosts:
+  - www.hydro.mb.ca/hydrologicalData/static/data
+
+authentication:
+  style: none
+  detail: see authentication/manitoba-hydro-authentication.yml
+
+content_negotiation:
+  mechanism: query parameter, not Accept header
+  arcgis_rest:
+    parameter: f
+    values: [json, geojson, pbf, html]
+    evidence: 'layer metadata supportedQueryFormats: "JSON, geoJSON, PBF"'
+    default_without_parameter: html
+  ogc_wfs:
+    parameter: outputFormat
+    default: GML 3.2 (application/gml+xml; version=3.2)
+  kisters_json:
+    parameter: none
+    note: static .json files; the parallel .html and .o.html renderings are separate files
+  service_level_export_formats:
+    evidence: 'FeatureServer supportedExportFormats'
+    values: [csv, shapefile, sqlite, geoPackage, filegdb, featureCollection, geojson, kml, excel]
+
+pagination:
+  style: offset
+  supported: true
+  evidence: 'layer advancedQueryCapabilities.supportsPagination = true'
+  parameters:
+  - name: resultOffset
+    description: Zero-based index of the first record to return.
+  - name: resultRecordCount
+    description: Number of records to return in this page.
+  response_fields:
+  - name: exceededTransferLimit
+    description: >-
+      Boolean present on every query response. True means the result set was
+      truncated by maxRecordCount and the caller must page with resultOffset.
+  page_size:
+    max_record_count: 2000
+    standard_max_record_count: 2000
+    note: >-
+      Both outage layers report maxRecordCount 2000 and standardMaxRecordCount
+      2000. The parent FeatureServer reports maxRecordCount 1000. Treat 1000 as
+      the safe page size. Counting without paging is available via
+      returnCountOnly=true.
+  ogc_wfs:
+    parameters: [count, startIndex]
+    note: WFS 2.0.0 native paging; the ArcGIS WFS implementation honours both.
+  kisters_json:
+    supported: false
+    note: >-
+      Each parameter file (1.json .. 15.json) is a complete snapshot of every
+      reporting station for that parameter. Water Level returned 158 stations in
+      a single 117 KB document. There is no paging and no incremental fetch.
+
+filtering_and_projection:
+  where:
+    parameter: where
+    description: SQL-92 predicate against layer attributes; use where=1=1 for all rows.
+    evidence: 'advancedQueryCapabilities.supportsSqlExpression = true'
+  field_selection:
+    parameter: outFields
+    description: Comma-separated attribute list, or * for all.
+  geometry_suppression:
+    parameter: returnGeometry
+    description: returnGeometry=false returns attributes only — much smaller payloads.
+  ordering:
+    parameter: orderByFields
+    evidence: 'advancedQueryCapabilities.supportsOrderBy = true'
+  distinct:
+    parameter: returnDistinctValues
+    evidence: 'advancedQueryCapabilities.supportsDistinct = true'
+  statistics:
+    parameter: outStatistics
+    evidence: 'advancedQueryCapabilities.supportsStatistics = true'
+  spatial:
+    parameters: [geometry, geometryType, spatialRel, inSR, outSR, distance, units]
+    note: >-
+      Native spatial reference is EPSG:26914 (NAD83 / UTM zone 14N) on the
+      outage services. Pass outSR=4326 to get WGS84 lon/lat.
+
+idempotency:
+  supported: false
+  reason: >-
+    Every catalogued operation is a read. The ArcGIS feature services advertise
+    capabilities "Query" only — no create, update, delete, or applyEdits — and
+    the KISTERS files are static. There is no unsafe operation to make
+    idempotent, so no Idempotency-Key contract exists and none is needed. All
+    reads are naturally idempotent.
+
+request_tracing:
+  request_id_header: none
+  note: >-
+    No X-Request-Id, X-Correlation-Id, or equivalent was observed on any
+    response. There is no support channel to quote a request id to.
+
+versioning:
+  arcgis_rest:
+    scheme: platform version reported in metadata, not in the URL path
+    hosted_current_version: 12
+    on_premise_current_version: '10.91'
+    note: >-
+      currentVersion is Esri's platform release, not a Manitoba Hydro API
+      version. There is no v1/v2 path segment, no version header, and no
+      published version policy. Service and layer names are the only stable
+      identifiers, and Manitoba Hydro has made no commitment to keep them stable.
+  ogc_wfs:
+    scheme: query parameter
+    parameter: version
+    current: 2.0.0
+    note: The only formally versioned contract Manitoba Hydro exposes.
+  kisters_json:
+    scheme: none
+    note: >-
+      File paths carry no version. An older parallel tree at
+      /hydrologicalData/data/ is still served but frozen at February 2021
+      readings — a silent, undocumented fork of the same surface. Only the
+      /static/ tree is current.
+
+error_envelope:
+  format: vendor JSON (ArcGIS) and OGC XML (WFS) — RFC 9457 problem+json is not used
+  detail: see errors/manitoba-hydro-problem-types.yml
+
+rate_limiting:
+  published_limits: none
+  headers: none
+  detail: >-
+    No X-RateLimit-*, RateLimit-*, or Retry-After headers were observed and no
+    rate limit is published anywhere. The only hard ceiling in evidence is the
+    per-request record cap (maxRecordCount 1000-2000), which is a result-size
+    limit rather than a request-rate limit. www.hydro.mb.ca sits behind an F5
+    web application firewall that will reject requests that do not look like a
+    browser — treat that as the practical throttle on the hydrological tree.
+  courtesy_guidance: >-
+    Source data refreshes every five minutes (Manitoba Hydro's own ArcGIS item
+    description for the planned outages layer). Polling faster than that gains
+    nothing.
+
+caching_and_freshness:
+  refresh_interval: 5 minutes (outage layers, per the provider's item description)
+  freshness_field: DATA_LAST_UPDATE (epoch milliseconds, on both outage layers)
+  conditional_requests: not advertised
+  note: >-
+    Timestamps on the ArcGIS layers are epoch milliseconds in UTC, not ISO 8601
+    strings. The KISTERS files carry human-formatted local timestamps wrapped in
+    a <sort d='YYYYMMDDHHMMSS'/> element inside the field value — parse the sort
+    attribute, not the display text.
+
+payload_quirks:
+- surface: arcgis-rest
+  quirk: >-
+    Date fields are returned as epoch milliseconds integers (TIME_OF_OUTAGE,
+    ETR, DATA_LAST_UPDATE, SCHEDULED_START_TIME, SCHEDULED_END_TIME).
+- surface: arcgis-rest
+  quirk: >-
+    Fixed-width string fields are space-padded to their declared length
+    (DEVICE_ADDRESS observed as "183 KENNEDY ST" followed by trailing spaces).
+    Trim before comparing.
+- surface: arcgis-rest
+  quirk: >-
+    Customer counts appear twice — NUM_CUST_NOPOWER (integer) and
+    NUM_CUST_NOPOWERTXT (banded string such as "Less than 5"). The banded string
+    is what the public outage map shows.
+- surface: kisters-json
+  quirk: >-
+    Observation records use positional attribute keys "0".."7" whose meaning is
+    declared in the sibling fields[] array of the same document. Values are HTML
+    fragments — station name arrives wrapped in an <a> tag carrying an internal
+    station id, numeric values arrive wrapped in <sort v='...'/>. There is no
+    clean machine field; every value needs unwrapping.
+- surface: kisters-json
+  quirk: >-
+    Parameters are addressed by integer pid (1 = Water Level, 3 = Air
+    Temperature, ...) resolved through tsdata.json; station metadata lives in a
+    separate 855 KB stationdata.json keyed by station number.
+
+cross_links:
+  authentication: authentication/manitoba-hydro-authentication.yml
+  errors: errors/manitoba-hydro-problem-types.yml
+  lifecycle: lifecycle/manitoba-hydro-lifecycle.yml
+  conformance: conformance/manitoba-hydro-conformance.yml
+  data_model: data-model/manitoba-hydro-data-model.yml
+  examples: examples/

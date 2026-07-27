@@ -42,7 +42,7 @@ accessModel:
   - probes
   generated: '2026-07-27'
   method: manual
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
+image: https://www.hydro.mb.ca/apple-touch-icon.png
 tags:
 - Energy
 - Canada
@@ -96,6 +96,18 @@ apis:
     url: https://www.hydro.mb.ca/outages/outage-map/
   - type: Standard
     url: https://www.ogc.org/standards/wfs/
+  - type: APIReference
+    name: OGC WFS 2.0.0 GetCapabilities (captured verbatim 2026-07-27)
+    url: wfs/manitoba-hydro-current-power-outages-wfs-capabilities.xml
+  - type: APIReference
+    name: OGC WFS DescribeFeatureType XML Schema (captured verbatim 2026-07-27)
+    url: wfs/manitoba-hydro-current-power-outages-describefeaturetype.xsd
+  - type: JSONSchema
+    name: Current power outage feature attributes
+    url: json-schema/manitoba-hydro-current-power-outages.schema.json
+  - type: Examples
+    name: Layer metadata and a live query response
+    url: examples/manitoba-hydro-current-power-outages-query-response.json
 - aid: manitoba-hydro:manitoba-hydro-planned-power-outages
   name: Manitoba Hydro Planned Power Outages
   description: >-
@@ -133,6 +145,18 @@ apis:
     url: https://www.hydro.mb.ca/outages/planned/
   - type: Standard
     url: https://www.ogc.org/standards/wfs/
+  - type: APIReference
+    name: OGC WFS 2.0.0 GetCapabilities (captured verbatim 2026-07-27)
+    url: wfs/manitoba-hydro-planned-power-outages-wfs-capabilities.xml
+  - type: APIReference
+    name: OGC WFS DescribeFeatureType XML Schema (captured verbatim 2026-07-27)
+    url: wfs/manitoba-hydro-planned-power-outages-describefeaturetype.xsd
+  - type: JSONSchema
+    name: Planned power outage feature attributes
+    url: json-schema/manitoba-hydro-planned-power-outages.schema.json
+  - type: Examples
+    name: Layer metadata and a live query response
+    url: examples/manitoba-hydro-planned-power-outages-query-response.json
 - aid: manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
   name: Manitoba Hydro ArcGIS Server Reference Data
   description: >-
@@ -159,6 +183,15 @@ apis:
     url: https://maps.hydro.mb.ca/arcgis/rest/services?f=json
   - type: APIReference
     url: https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer?f=json
+  - type: JSONSchema
+    name: MH_CustomerServiceCentres feature attributes
+    url: json-schema/manitoba-hydro-customer-service-centres.schema.json
+  - type: JSONSchema
+    name: MH_LocateAreas feature attributes
+    url: json-schema/manitoba-hydro-locate-areas.schema.json
+  - type: JSONSchema
+    name: MH_StationAreas feature attributes
+    url: json-schema/manitoba-hydro-station-areas.schema.json
 - aid: manitoba-hydro:manitoba-hydro-hydrological-data
   name: Manitoba Hydro Hydrological Data
   description: >-
@@ -200,7 +233,47 @@ apis:
     url: https://www.hydro.mb.ca/hydrologicalData/static/data/stationdata.json
   - type: APIReference
     url: https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json
+  - type: JSONSchema
+    name: Hydrological parameter observation file
+    url: json-schema/manitoba-hydro-hydrological-timeseries.schema.json
+  - type: Examples
+    name: Live parameter index (15 monitored parameters)
+    url: examples/manitoba-hydro-hydrological-parameter-index.json
 common:
+- type: VulnerabilityDisclosure
+  url: security/manitoba-hydro-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/manitoba-hydro-domain-security.yml
+- type: WellKnown
+  name: /.well-known/ discovery surface across every hydro.mb.ca host
+  url: well-known/manitoba-hydro-well-known.yml
+- type: SecurityTxt
+  name: RFC 9116 security.txt (captured verbatim)
+  url: well-known/manitoba-hydro-security.txt
+- type: Authentication
+  name: Authentication profile — anonymous on every published surface
+  url: authentication/manitoba-hydro-authentication.yml
+- type: Conventions
+  name: Cross-cutting request/response semantics
+  url: conventions/manitoba-hydro-conventions.yml
+- type: ErrorCatalog
+  name: Error envelopes and reproduced failure modes
+  url: errors/manitoba-hydro-problem-types.yml
+- type: Conformance
+  name: Standards conformance — OGC WFS 2.0.0 and RFC 9116 only
+  url: conformance/manitoba-hydro-conformance.yml
+- type: Lifecycle
+  name: Versioning, deprecation, SLA and freshness posture
+  url: lifecycle/manitoba-hydro-lifecycle.yml
+- type: DataModel
+  name: Entity graph and inferred joins across the four data islands
+  url: data-model/manitoba-hydro-data-model.yml
+- type: Examples
+  name: Captured live requests and responses
+  url: examples/_index.yml
+- type: LLMsTxt
+  name: llms.txt for Manitoba Hydro (authored by API Evangelist)
+  url: llms/manitoba-hydro-llms.txt
 - type: Website
   url: https://www.hydro.mb.ca/
 - type: About
@@ -209,8 +282,14 @@ common:
   url: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
 - type: TermsOfService
   url: https://www.hydro.mb.ca/terms-of-use/
+- type: PrivacyPolicy
+  name: Privacy statement (a section of the site terms of use)
+  url: https://www.hydro.mb.ca/terms-of-use/#privacy
 - type: SignUp
   url: https://account.hydro.mb.ca/Portal
+- type: Support
+  name: Customer support (there is no developer support channel)
+  url: https://www.hydro.mb.ca/support/
 - type: ContactUs
   url: https://www.hydro.mb.ca/support/contact/
 - type: Security

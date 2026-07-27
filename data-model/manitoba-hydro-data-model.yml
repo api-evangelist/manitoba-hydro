@@ -1,0 +1,244 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  live ArcGIS layer metadata and query responses captured 2026-07-27
+  (examples/), the WFS DescribeFeatureType schemas (wfs/), and the KISTERS
+  hydrological JSON tree; modelled formally in json-schema/
+summary: >-
+  Manitoba Hydro publishes four disconnected data islands, not one data model.
+  Nothing declares a relationship to anything else — there are no ArcGIS
+  relationshipClasses on any service, no foreign-key declarations, and no
+  documentation. The joins below are inferred from matching attribute values and
+  are stated with an explicit confidence, because Manitoba Hydro has never
+  asserted them.
+
+entities:
+- name: CurrentOutage
+  label: MH Current Power Outages
+  api: manitoba-hydro:manitoba-hydro-current-power-outages
+  source: services2.arcgis.com/.../Manitoba_Hydro_Current_Power_Outages/FeatureServer/0
+  schema: json-schema/manitoba-hydro-current-power-outages.schema.json
+  geometry: polygon (EPSG:26914)
+  primary_key: OBJECTID
+  business_key: OUTAGE_ID
+  business_key_note: >-
+    Composite-looking string of the form "928429-1" — an operations order number
+    with a sequence suffix. Not declared unique by the service.
+  volume_observed: 8 features
+  key_fields:
+  - {field: OUTAGE_ID, role: business identifier}
+  - {field: OUTAGE_TYPE, role: classification}
+  - {field: CAUSE, role: classification}
+  - {field: SUBCAUSE, role: classification}
+  - {field: CREW_STATUS, role: state, observed_values: ['Initial Assessment']}
+  - {field: TIME_OF_OUTAGE, role: event time, format: epoch-ms}
+  - {field: ETR, role: estimated restoration time, format: epoch-ms}
+  - {field: FIELD_VERIFIED_ETR, role: confidence flag, observed_values: ['No']}
+  - {field: NUM_CUST_NOPOWER, role: measure}
+  - {field: NUM_CUST_NOPOWERTXT, role: banded measure, observed_values: ['Less than 5']}
+  - {field: DATA_LAST_UPDATE, role: freshness, format: epoch-ms}
+- name: PlannedOutage
+  label: MH Planned Power Outages
+  api: manitoba-hydro:manitoba-hydro-planned-power-outages
+  source: services2.arcgis.com/.../Manitoba_Hydro_Planned_Power_Outages/FeatureServer/0
+  schema: json-schema/manitoba-hydro-planned-power-outages.schema.json
+  geometry: polygon (EPSG:26914)
+  primary_key: OBJECTID
+  business_key: ORDER_ID
+  business_key_note: >-
+    Same "923900-1" shape as OUTAGE_ID on the current-outage layer, and the only
+    non-nullable string field on either outage layer.
+  volume_observed: 48 features
+  key_fields:
+  - {field: ORDER_ID, role: business identifier}
+  - {field: ORDER_TYPE, role: classification, observed_values: ['pre_arranged']}
+  - {field: ORDER_CAUSE, role: classification, observed_values: ['Planned outage']}
+  - {field: ORDER_STATUS_DESCRIPTION, role: state, observed_values: ['Ready']}
+  - {field: ORDER_DESCRIPTION, role: free text, observed_values: ['switching order']}
+  - {field: DEVICE, role: asset reference, observed_values: ['Transformer Bank(5201-22241)']}
+  - {field: DEVICE_ADDRESS, role: street address, note: space-padded to 250 chars}
+  - {field: CSC, role: organizational area, observed_values: ['CITY CENTER']}
+  - {field: SCHEDULED_START_TIME, role: window start, format: epoch-ms}
+  - {field: SCHEDULED_END_TIME, role: window end, format: epoch-ms}
+- name: CustomerServiceCentre
+  label: MH_CustomerServiceCentres
+  api: manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
+  source: maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/0
+  schema: json-schema/manitoba-hydro-customer-service-centres.schema.json
+  geometry: polygon
+  primary_key: OBJECTID
+  business_key: csc_code
+  volume_observed: 19 features
+  key_fields:
+  - {field: csc_code, role: business identifier, observed_values: ['KILC']}
+  - {field: csc_name, role: label, observed_values: ['KILLARNEY']}
+  - {field: sap_code, role: cross-system identifier, observed_values: ['4140']}
+  - {field: SAP_CSC_CODE, role: cross-system identifier}
+  - {field: EGIS_CSC_CODE, role: cross-system identifier}
+  - {field: maintenance_areas, role: grouping}
+  - {field: operating_area, role: grouping}
+  pii_note: >-
+    inserted_by and updated_by carry internal Manitoba Hydro staff usernames and
+    date_inserted / date_updated carry the corresponding audit timestamps. These
+    are exposed anonymously. Do not republish those values; drop them with
+    outFields.
+- name: LocateArea
+  label: MH_LocateAreas
+  api: manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
+  source: maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/1
+  schema: json-schema/manitoba-hydro-locate-areas.schema.json
+  geometry: polygon
+  primary_key: OBJECTID
+  business_key: LOCA_NAME
+  key_fields:
+  - {field: LOCA_NAME, role: business identifier}
+  - {field: description, role: label}
+  - {field: service_grids, role: grouping}
+  pii_note: same inserted_by / updated_by staff-username exposure as CustomerServiceCentre.
+- name: StationArea
+  label: MH_StationAreas
+  api: manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
+  source: maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/2
+  schema: json-schema/manitoba-hydro-station-areas.schema.json
+  geometry: polygon
+  primary_key: OBJECTID
+  business_key: NUMBER
+  key_fields:
+  - {field: NAME, role: label}
+  - {field: NUMBER, role: business identifier}
+  - {field: OWNER, role: attribution}
+  - {field: STATE, role: state}
+  - {field: CSC_NUMBER, role: foreign key candidate}
+- name: HydrologicalParameter
+  label: Monitored parameter (tsdata.json)
+  api: manitoba-hydro:manitoba-hydro-hydrological-data
+  source: https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json
+  primary_key: pid
+  volume_observed: 15 parameters
+  members:
+  - {pid: 1, name: Water Level}
+  - {pid: 2, name: Water Temperature}
+  - {pid: 3, name: Air Temperature}
+  - {pid: 4, name: Precipitation}
+  - {pid: 5, name: Wind Direction (UD)}
+  - {pid: 6, name: Wind Speed (US)}
+  - {pid: 7, name: Wind Gust Speed (UG)}
+  - {pid: 8, name: Relative Humidity}
+  - {pid: 9, name: Atmospheric Pressure}
+  - {pid: 10, name: Wind Speed (US10)}
+  - {pid: 11, name: Wind Direction (UD10)}
+  - {pid: 12, name: Peak Wind Speed (UP)}
+  - {pid: 13, name: Peak Wind Direction (UR)}
+  - {pid: 14, name: Wind Gust Direction (UH)}
+  - {pid: 15, name: Snow Depth}
+  members_note: >-
+    pid values 1-15 were read from the live tsdata.json on 2026-07-27 and each
+    resolves to <pid>.json in the same directory. The mapping is not published
+    and may be renumbered without notice.
+- name: GaugingStation
+  label: Station metadata (stationdata.json)
+  api: manitoba-hydro:manitoba-hydro-hydrological-data
+  source: https://www.hydro.mb.ca/hydrologicalData/static/data/stationdata.json
+  primary_key: station number
+  volume_observed: 169 stations
+  key_fields:
+  - {field: station number, role: business identifier, example: 05UF706}
+  - {field: station name, role: label}
+  - {field: river, role: grouping}
+  - {field: catchment, role: grouping}
+  - {field: latitude, role: location}
+  - {field: elevation, role: measure}
+  attribution_note: >-
+    Manitoba Hydro states the gauging stations are managed by Manitoba Hydro,
+    the Water Survey of Canada, and Manitoba Water Stewardship. Station numbers
+    follow the Water Survey of Canada convention, so this entity is partly a
+    federal dataset restated.
+- name: HydrologicalObservation
+  label: Per-parameter observation record (<pid>.json)
+  api: manitoba-hydro:manitoba-hydro-hydrological-data
+  source: https://www.hydro.mb.ca/hydrologicalData/static/data/1.json
+  schema: json-schema/manitoba-hydro-hydrological-timeseries.schema.json
+  primary_key: (pid, station number)
+  volume_observed: 158 stations reporting Water Level
+  note: >-
+    Latest-value snapshot only. There is no history endpoint, no time-range
+    parameter, and no bulk time series — only the most recent reading per
+    station per parameter. Building a series requires polling and storing it
+    yourself.
+
+relationships:
+- from: PlannedOutage
+  to: CustomerServiceCentre
+  kind: belongs_to
+  via: CSC -> csc_name
+  confidence: medium
+  evidence: >-
+    PlannedOutage.CSC held "CITY CENTER" and CustomerServiceCentre.csc_name
+    holds upper-case service centre names such as "KILLARNEY". The value shapes
+    match, but the layers live on different hosts (services2.arcgis.com vs
+    maps.hydro.mb.ca) with no declared relationship and no shared code field,
+    and the join is on a display name rather than csc_code.
+- from: StationArea
+  to: CustomerServiceCentre
+  kind: belongs_to
+  via: CSC_NUMBER -> csc_number
+  confidence: low
+  evidence: >-
+    Field names align exactly, but csc_number was null on the CustomerServiceCentre
+    records sampled, so the join could not be exercised. Use sap_code /
+    SAP_CSC_CODE instead if a hard key is needed.
+- from: HydrologicalObservation
+  to: GaugingStation
+  kind: belongs_to
+  via: attributes["1"] (station number) -> stationdata.json station number
+  confidence: high
+  evidence: >-
+    Station number 05UF706 in the Water Level observation file resolves against
+    the station metadata file. This is the only join in the whole estate that is
+    unambiguous.
+- from: HydrologicalObservation
+  to: HydrologicalParameter
+  kind: belongs_to
+  via: file name <pid>.json -> tsdata.json features[].attributes.pid
+  confidence: high
+  evidence: The url.JSON member of each tsdata entry names the observation file directly.
+- from: CurrentOutage
+  to: PlannedOutage
+  kind: none
+  confidence: high
+  evidence: >-
+    No relationship. OUTAGE_ID and ORDER_ID share a format but the two layers
+    are separate publications with different attribute sets, and nothing links a
+    completed planned order to a current outage.
+- from: CurrentOutage
+  to: GaugingStation
+  kind: none
+  confidence: high
+  evidence: >-
+    The grid and hydrology estates share no key, no host, and no vocabulary.
+    Any correlation must be spatial, and the outage polygons and gauging station
+    points are in different coordinate systems (EPSG:26914 vs decimal degrees).
+
+spatial_join:
+  note: >-
+    The only general-purpose way to relate these entities is geometry. All
+    ArcGIS layers support spatial queries (geometry, geometryType, spatialRel,
+    inSR, outSR); pass outSR=4326 to bring everything into WGS84 before
+    intersecting with the hydrological station coordinates.
+
+gaps:
+- No customer, account, premise, meter, or consumption entity exists — Manitoba
+  Hydro has no advanced metering infrastructure and no consumer data API, so
+  there is nothing on the demand side of the model at all.
+- No asset entity. DEVICE on PlannedOutage names transformer banks by id but no
+  asset registry is published to resolve them against.
+- No generation, transmission, interchange, or wholesale market entity. Manitoba
+  Hydro trades into MISO but publishes none of that data itself.
+
+render: null
+render_note: No subway/ or ERD visual exists in this repo yet.
+
+cross_links:
+  conventions: conventions/manitoba-hydro-conventions.yml
+  json_schema: json-schema/
+  examples: examples/

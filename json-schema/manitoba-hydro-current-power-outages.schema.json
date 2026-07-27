@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/json-schema/manitoba-hydro-current-power-outages.schema.json",
+  "title": "Manitoba Hydro \u2014 MH Current Power Outages (feature attributes)",
+  "description": "Attribute schema for a single feature returned by the Manitoba Hydro Current Power Outages feature layer. Geometry is an esriGeometryPolygon in EPSG:26914 (NAD83 / UTM zone 14N) unless outSR is supplied.",
+  "x-apievangelist": {
+    "generated": "2026-07-27",
+    "method": "derived",
+    "source": "https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0?f=json",
+    "note": "Derived from the live Esri layer metadata (?f=json) captured 2026-07-27. Manitoba Hydro publishes no schema for this layer; this document models the attributes block of a query response feature."
+  },
+  "type": "object",
+  "properties": {
+    "OBJECTID": {
+      "title": "OBJECTID",
+      "description": "ArcGIS field type esriFieldTypeOID.",
+      "type": "integer"
+    },
+    "OUTAGE_ID": {
+      "title": "Outage ID",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 25
+    },
+    "OUTAGE_TYPE": {
+      "title": "Outage Type",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 50
+    },
+    "TIME_OF_OUTAGE": {
+      "title": "Time of Outage",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "NUM_CUST_NOPOWERTXT": {
+      "title": "Customers without power",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 25
+    },
+    "NUM_CUST_NOPOWER": {
+      "title": "Customers without power",
+      "description": "ArcGIS field type esriFieldTypeInteger.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "ETR": {
+      "title": "ETR",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "CAUSE": {
+      "title": "Cause",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255
+    },
+    "SUBCAUSE": {
+      "title": "Subcause",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255
+    },
+    "CREW_STATUS": {
+      "title": "Crew Status",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 255
+    },
+    "FIELD_VERIFIED_ETR": {
+      "title": "Field Verified ETR",
+      "description": "ArcGIS field type esriFieldTypeString.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 3
+    },
+    "DATA_LAST_UPDATE": {
+      "title": "Data Last Updated",
+      "description": "ArcGIS field type esriFieldTypeDate. Returned as epoch milliseconds (UTC), not an ISO 8601 string.",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "x-esri-format": "epoch-milliseconds"
+    },
+    "AREA": {
+      "title": "Area",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "Shape__Area": {
+      "title": "Shape__Area",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "Shape__Length": {
+      "title": "Shape__Length",
+      "description": "ArcGIS field type esriFieldTypeDouble.",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "OBJECTID"
+  ],
+  "additionalProperties": false
+}
