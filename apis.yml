@@ -1,0 +1,224 @@
+aid: manitoba-hydro
+url: https://raw.githubusercontent.com/api-evangelist/manitoba-hydro/refs/heads/main/apis.yml
+name: Manitoba Hydro
+kind: company
+description: >-
+  Manitoba Hydro is the provincial Crown corporation that generates, transmits,
+  and distributes electricity and distributes natural gas across Manitoba,
+  Canada — "Manitoba's publicly owned electricity and natural gas supplier" in
+  its own words, serving 632,117 electric customers and 300,789 natural gas
+  customers, and trading electricity into wholesale markets across the
+  Midwestern U.S. and Canada. It is a vertically integrated monopoly in a
+  province with no retail competition, no independent system operator of its
+  own, and no consumer energy data mandate: Ontario's Green Button regulation
+  (O. Reg. 633/21) binds Ontario distributors only, Australia's Consumer Data
+  Right does not reach Canada, and the Green Button Alliance states plainly that
+  it has "no information about Green Button deployments in Manitoba." Manitoba
+  Hydro also has no advanced metering infrastructure — its 2006-2009 smart meter
+  pilot was not continued — so there is no interval consumption data for a
+  consumer API to serve in the first place. The API posture is therefore the
+  inverse of a mandated utility: consumer data is entirely closed, reachable
+  only by the customer through a login at account.hydro.mb.ca, while grid and
+  system data is genuinely open and anonymous. Manitoba Hydro runs a public
+  ArcGIS Online organization whose current and planned power outage layers are
+  queryable without a key over both the Esri ArcGIS REST API and OGC WFS 2.0.0,
+  refreshed every five minutes; an on-domain ArcGIS Server REST directory at
+  maps.hydro.mb.ca; and a live KISTERS hydrological monitoring application whose
+  station and time-series JSON at hydro.mb.ca is served anonymously and was
+  observed carrying same-day readings. None of it is documented as an API.
+  There is no developer portal, no API keys, no OpenAPI, and no terms of use for
+  data reuse — the open surface exists as a by-product of public map publishing
+  rather than as an API program.
+accessModel:
+  pricing: free
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: true
+  label: Free · Anonymous, no registration, no documentation
+  confidence: high
+  source:
+  - documentation
+  - probes
+  generated: '2026-07-27'
+  method: manual
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
+tags:
+- Energy
+- Canada
+- Utilities
+- Electricity
+- Gas
+- Hydroelectric
+- Grid
+- Outage Data
+- Open Data
+- Crown Corporation
+created: '2026-07-27'
+modified: '2026-07-27'
+specificationVersion: '0.19'
+apis:
+- aid: manitoba-hydro:manitoba-hydro-current-power-outages
+  name: Manitoba Hydro Current Power Outages
+  description: >-
+    A hosted Esri feature service published by Manitoba Hydro's ArcGIS Online
+    organization (org id QoeQkfdOG126FqSi, org name "Manitoba Hydro", item owner
+    dcarpenter@hydro.mb.ca) carrying live unplanned power outage polygons. The
+    item is shared publicly and was queried anonymously with no key, token, or
+    registration — an anonymous returnCountOnly query returned 8 active outages
+    at review time. Layer 0 "MH Current Power Outages" exposes OUTAGE_ID,
+    OUTAGE_TYPE, TIME_OF_OUTAGE, NUM_CUST_NOPOWER, NUM_CUST_NOPOWERTXT, ETR,
+    CAUSE, SUBCAUSE, CREW_STATUS, FIELD_VERIFIED_ETR, DATA_LAST_UPDATE and AREA.
+    Service capabilities are Query only. The same data is also published as an
+    OGC WFS 2.0.0 endpoint whose GetCapabilities document was retrieved
+    anonymously. Manitoba Hydro publishes no documentation, no terms of use, and
+    no rate limits for this surface — it is a public map layer that behaves as
+    an API.
+  humanURL: https://www.arcgis.com/home/item.html?id=607ef103b2934e3fbbbc7b05c4c3df34
+  baseURL: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer
+  tags:
+  - Outage Data
+  - Grid
+  - Electricity
+  - Geospatial
+  - ArcGIS REST
+  - WFS
+  properties:
+  - type: APIReference
+    url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer?f=json
+  - type: APIReference
+    url: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Current_Power_Outages_WFS/WFSServer?service=wfs&request=getcapabilities
+  - type: Documentation
+    url: https://www.arcgis.com/home/item.html?id=607ef103b2934e3fbbbc7b05c4c3df34
+  - type: Documentation
+    url: https://www.arcgis.com/home/item.html?id=9cd3470a9a8c428185a768dbcc217ce3
+  - type: Documentation
+    url: https://www.hydro.mb.ca/outages/outage-map/
+  - type: Standard
+    url: https://www.ogc.org/standards/wfs/
+- aid: manitoba-hydro:manitoba-hydro-planned-power-outages
+  name: Manitoba Hydro Planned Power Outages
+  description: >-
+    A hosted Esri feature service published by the same Manitoba Hydro ArcGIS
+    Online organization carrying planned outage areas. The item description
+    states the layer "contains planned power outages and the area that will be
+    impacted. Attributes include the scheduled start and end date/time for each
+    outage. This data is updated every 5 minutes." Queried anonymously with no
+    credentials, an unfiltered count returned 48 planned outages at review time.
+    Layer 0 "MH Planned Power Outages" exposes ORDER_ID, ORDER_LAST_UPDATED,
+    ORDER_STATUS_DESCRIPTION, ORDER_CAUSE, ORDER_TYPE, ORDER_DESCRIPTION,
+    DEVICE, DEVICE_ADDRESS, CSC, SCHEDULED_START_TIME, SCHEDULED_END_TIME,
+    DATA_LAST_UPDATE and NUM_CUST_NOPOWERTXT. A parallel OGC WFS 2.0.0 endpoint
+    is published for the same layer. No licence or terms of use is attached to
+    the item.
+  humanURL: https://www.arcgis.com/home/item.html?id=016914ea3b28449e8205e07c04a92d51
+  baseURL: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Planned_Power_Outages/FeatureServer
+  tags:
+  - Outage Data
+  - Grid
+  - Electricity
+  - Geospatial
+  - ArcGIS REST
+  - WFS
+  properties:
+  - type: APIReference
+    url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Planned_Power_Outages/FeatureServer?f=json
+  - type: APIReference
+    url: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Planned_Power_Outages_WFS/WFSServer?service=wfs&request=getcapabilities
+  - type: Documentation
+    url: https://www.arcgis.com/home/item.html?id=016914ea3b28449e8205e07c04a92d51
+  - type: Documentation
+    url: https://www.arcgis.com/home/item.html?id=4cc075a46e574c15816b28b93a1f2de3
+  - type: Documentation
+    url: https://www.hydro.mb.ca/outages/planned/
+  - type: Standard
+    url: https://www.ogc.org/standards/wfs/
+- aid: manitoba-hydro:manitoba-hydro-arcgis-server-reference-data
+  name: Manitoba Hydro ArcGIS Server Reference Data
+  description: >-
+    An ArcGIS Server 10.91 REST services directory hosted on Manitoba Hydro's
+    own domain at maps.hydro.mb.ca, readable anonymously. The root listing
+    returned nine folders (ARL, ConTrack, DISTAPPS, GDS, JUTA, LEA, Locators,
+    ReferenceData, Utilities); most are empty to an anonymous caller, but
+    ReferenceData/MH_AdminBoundaries is fully readable and exposes three
+    query-capable layers — MH_CustomerServiceCentres (19 features),
+    MH_LocateAreas and MH_StationAreas. The site root itself returns HTTP 403;
+    only the /arcgis/rest/services tree responds. Manitoba Hydro publishes no
+    documentation, index, or terms for this host — it is recorded here because
+    it is a real, on-domain, anonymously queryable API surface, not because it
+    is offered as one.
+  humanURL: https://maps.hydro.mb.ca/arcgis/rest/services?f=json
+  baseURL: https://maps.hydro.mb.ca/arcgis/rest/services
+  tags:
+  - Geospatial
+  - ArcGIS REST
+  - Reference Data
+  - Grid
+  properties:
+  - type: APIReference
+    url: https://maps.hydro.mb.ca/arcgis/rest/services?f=json
+  - type: APIReference
+    url: https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer?f=json
+- aid: manitoba-hydro:manitoba-hydro-hydrological-data
+  name: Manitoba Hydro Hydrological Data
+  description: >-
+    Manitoba Hydro's near-real-time hydrological monitoring application, a
+    KISTERS WISKI Web Public deployment documented on hydro.mb.ca and reachable
+    at https://www.hydro.mb.ca/hydrologicalData/static/. The application is
+    documented for humans; its data files are not documented at all, but they
+    are served anonymously as JSON and were verified live — station metadata
+    (169 gauging stations with river, catchment, latitude, elevation and station
+    number fields), a layer index of 15 monitored parameters (Water Level, Water
+    Temperature, Air Temperature, Precipitation, Snow Depth, wind speed,
+    direction, gust and peak variants, Relative Humidity, Atmospheric Pressure),
+    and per-parameter observation files. The Water Level file returned 158
+    stations with readings timestamped the same day as this review. Manitoba
+    Hydro's own page states the readings come from gauging stations managed by
+    Manitoba Hydro, the Water Survey of Canada and Manitoba Water Stewardship,
+    that data are "preliminary and are being transmitted automatically without
+    verification or review for quality assurance," and that Manitoba Hydro "does
+    not warrant the quality, accuracy, or completeness of any information."
+    There is no API documentation, no versioning, and no stated licence. Note
+    that an older parallel tree at /hydrologicalData/data/ is still served but
+    is frozen at February 2021 readings; only the /static/ tree is current.
+  humanURL: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
+  baseURL: https://www.hydro.mb.ca/hydrologicalData/static/data/
+  tags:
+  - Hydrology
+  - Water Levels
+  - Hydroelectric
+  - Open Data
+  - Monitoring
+  properties:
+  - type: Documentation
+    url: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
+  - type: Documentation
+    url: https://www.hydro.mb.ca/corporate/operations/water-levels/
+  - type: Portal
+    url: https://www.hydro.mb.ca/hydrologicalData/static/
+  - type: APIReference
+    url: https://www.hydro.mb.ca/hydrologicalData/static/data/stationdata.json
+  - type: APIReference
+    url: https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json
+common:
+- type: Website
+  url: https://www.hydro.mb.ca/
+- type: About
+  url: https://www.hydro.mb.ca/corporate/
+- type: Documentation
+  url: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
+- type: TermsOfService
+  url: https://www.hydro.mb.ca/terms-of-use/
+- type: SignUp
+  url: https://account.hydro.mb.ca/Portal
+- type: ContactUs
+  url: https://www.hydro.mb.ca/support/contact/
+- type: Security
+  url: https://www.hydro.mb.ca/.well-known/security.txt
+- type: LinkedIn
+  url: https://www.linkedin.com/company/manitoba-hydro
+- type: Blog
+  url: https://www.hydro.mb.ca/articles/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,535 @@
+aid: manitoba-hydro
+name: Manitoba Hydro
+review:
+  question: >-
+    Does any consumer energy data mandate bind Manitoba Hydro, does it expose a
+    consumer energy data API, and does it publish any genuinely open grid or
+    system data?
+  answer: >-
+    No mandate binds it, there is no consumer data API of any kind, and yet the
+    open grid and system data surface is real, anonymous, and live. Manitoba
+    Hydro is the mirror image of a mandated utility: closed where regulation
+    would have forced it open, open where nothing forced it at all.
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  homeMarket: Canada
+  tier: utility-retailer
+
+mandate:
+  regime: none
+  status: none
+  instrument: >-
+    None. No Manitoba statute or regulation creates a consumer energy data
+    right, and no federal Canadian instrument does either. Electricity is a
+    provincial matter in Canada and Manitoba has not legislated in this space.
+  regimesConsideredAndRuledOut:
+    - regime: green-button-ontario
+      ruledOutBecause: >-
+        Ontario Regulation 633/21 (Energy Data), made under the Electricity Act,
+        1998, binds Ontario electricity and natural gas local distribution
+        companies. Manitoba Hydro is a Manitoba Crown corporation licensed and
+        regulated in Manitoba by the Public Utilities Board. The Ontario
+        regulation has no extra-provincial reach and does not apply.
+    - regime: cdr-energy
+      ruledOutBecause: >-
+        Australia's Consumer Data Right and its energy sector designation are
+        Australian law administered by the ACCC and the Data Standards Body.
+        There is no Canadian equivalent for energy. Canada's own consumer-driven
+        banking framework covers financial data only and has no energy sector.
+    - regime: green-button-voluntary
+      ruledOutBecause: >-
+        Voluntary adoption was tested and not found. The Green Button Alliance
+        Canadian Initiatives page states verbatim: "We currently have no
+        information about Green Button deployments in Manitoba, New Brunswick,
+        Newfoundland and Labrador, Prince Edward Island, Quebec, or
+        Saskatchewan." No page, path, or search result on hydro.mb.ca mentions
+        Green Button, ESPI, Download My Data, or Connect My Data. The path
+        https://www.hydro.mb.ca/green-button/ returned HTTP 404.
+    - regime: smart-meter-infrastructure
+      ruledOutBecause: >-
+        There is no smart meter infrastructure to mandate. Manitoba Hydro's own
+        article at
+        https://www.hydro.mb.ca/articles/2022/04/advanced_metering_infrastructure/
+        (HTTP 200) states "Manitoba doesn't have AMI right now" and that the
+        utility "did a pilot program for smart meters from 2006 to 2009, and it
+        was determined at the time they were not viable," with any future
+        deployment "subject to regulatory requirements, a review by the Public
+        Utilities Board, and customer engagement." No UK DCC-style central
+        metering data infrastructure exists in Manitoba.
+  appliesToThisOrganization: false
+  whatWasVerified:
+    - >-
+      Absence of Green Button at the standards body. The Green Button Alliance
+      Canadian Initiatives page (HTTP 200) names Ontario (mandated November 2021)
+      and Nova Scotia (Bill 145, April 2022) as the only Canadian jurisdictions
+      with a Green Button obligation, and explicitly lists Manitoba among the
+      provinces it has no information about.
+    - >-
+      Absence of Green Button at the utility. Neither hydro.mb.ca site search
+      results, the 880-URL English sitemap at
+      https://www.hydro.mb.ca/en/sitemap.xml (HTTP 200), nor any probed path
+      surfaced a Green Button, ESPI, DMD, or CMD page.
+    - >-
+      Absence of the underlying data. Without AMI there is no interval
+      consumption data for a Green Button or CDR-style API to serve. Manitoba
+      Hydro's meter guidance at https://www.hydro.mb.ca/account/meters/
+      (HTTP 200) describes customer-submitted meter readings, and the mobile app
+      listing describes monthly usage compared to the prior year — a billing
+      cycle granularity, not interval data.
+  claimVersusImplementationNote: >-
+    There is no claim to test. Manitoba Hydro makes no compliance statement
+    about consumer energy data, publishes no press release about data sharing,
+    and appears on no regulator or standards-body register. This is recorded as
+    regime "none" and status "none" — not as designated-not-live, because no
+    obligation has been designated, and not as live-claimed-unverified, because
+    nothing is claimed.
+
+dataStandard:
+  energyDataStandard: >-
+    No standard reference found. No Green Button or NAESB REQ.21 ESPI reference,
+    no CDR Consumer Data Standards reference, no OCPP or OCPI, no OpenADR, no
+    IEEE 2030.5, and no IEC CIM 61968/61970 reference was found anywhere on
+    hydro.mb.ca or in Manitoba Hydro's published material.
+  standardsActuallyImplemented:
+    - name: OGC Web Feature Service (WFS) 2.0.0
+      where: >-
+        https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Current_Power_Outages_WFS/WFSServer
+        and the parallel Planned Power Outages WFS. A GetCapabilities request
+        returned HTTP 200 with a wfs:WFS_Capabilities document declaring
+        version="2.0.0" and ows:Abstract "Current power outages in Manitoba."
+      note: >-
+        This is a geospatial interoperability standard, not an energy data
+        standard. It is the only formal, machine-readable service contract
+        Manitoba Hydro publishes anywhere.
+    - name: Esri ArcGIS REST API (Feature Service)
+      where: >-
+        https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/...
+        and https://maps.hydro.mb.ca/arcgis/rest/services (ArcGIS Server 10.91).
+      note: >-
+        A vendor API convention rather than an open standard, but self-describing
+        via ?f=json and queryable anonymously.
+  payloadFormats:
+    - Esri JSON and GeoJSON via the ArcGIS REST query interface
+    - GML via the OGC WFS endpoints
+    - Bespoke JSON for the KISTERS WISKI Web Public hydrological files
+  proprietaryShapes: >-
+    The hydrological JSON files under /hydrologicalData/static/data/ are a
+    KISTERS Web Public application format with positional field keys ("0".."7")
+    plus named attributes. Undocumented and vendor-specific.
+
+consumerVersusMarketData:
+  consumer_data_api: false
+  consumerDataNote: >-
+    There is no route by which a third party can obtain an individual Manitoba
+    Hydro customer's usage or billing data through an API. The only consumer
+    surface is the customer's own login at https://account.hydro.mb.ca/Portal
+    (HTTP 200, page title "::Manitoba Hydro:: Login") and the companion mobile
+    app, whose Google Play package identifier com.sew.manitoba identifies the
+    platform as Smart Energy Water's Smart Customer Mobile. The portal's backend
+    is exposed at https://account.hydro.mb.ca/API/ (HTTP 200), an ASP.NET Web
+    API landing page branded "SCM Service API" — but it lists no operations and
+    its help page at https://account.hydro.mb.ca/API/Help returns HTTP 403. This
+    is a vendor SaaS backend for the utility's own web and mobile clients, not a
+    third-party API, and it is recorded as such. There is no consent flow, no
+    OAuth surface, no data export documented, and no third-party onboarding
+    programme.
+  market_data_open: true
+  marketDataNote: >-
+    Manitoba Hydro publishes genuinely open, anonymous, live grid and system
+    data — but as public maps, not as an API programme. Three surfaces were
+    verified with no credentials of any kind:
+    (1) A public ArcGIS Online organization, id QoeQkfdOG126FqSi, portal name
+    "Manitoba Hydro", urlKey "mbhydro", whose org description begins "Manitoba
+    Hydro is a Crown Corporation and the province's major energy utility." A
+    search of that org returned 216 publicly shared items. Manitoba Hydro
+    Current Power Outages and Manitoba Hydro Planned Power Outages are hosted
+    feature services with parallel OGC WFS endpoints; the planned outages item
+    description states "This data is updated every 5 minutes." Anonymous
+    returnCountOnly queries returned 8 current outages and 48 planned outages,
+    plus 512 Station Locations, 19 Customer Service Centres and 122 vegetation
+    management work items on sibling public services.
+    (2) An on-domain ArcGIS Server 10.91 REST directory at
+    https://maps.hydro.mb.ca/arcgis/rest/services (HTTP 200 to an anonymous
+    caller, while the host root returns HTTP 403), with
+    ReferenceData/MH_AdminBoundaries fully readable.
+    (3) A live KISTERS WISKI Web Public hydrological application at
+    https://www.hydro.mb.ca/hydrologicalData/static/, documented for humans at
+    /corporate/operations/water-levels/hydrological-data/, whose JSON files are
+    served anonymously — 169 gauging stations, 15 monitored parameters, and
+    Water Level readings for 158 stations timestamped 2026-07-27, the day of
+    this review.
+    What Manitoba Hydro does NOT publish is wholesale market data. It trades
+    electricity into Midwestern U.S. and Canadian wholesale markets, but that
+    market data is published by MISO and other operators, not by Manitoba Hydro.
+    There is no EIA-style, AEMO-style, or NESO-style system data API here.
+  theSplit: >-
+    This is the sharpest inversion in the Canadian set. Ontario's mandated
+    distributors have a real consumer data API and no open grid data. Manitoba
+    Hydro has no consumer data API at all — not gated, not applied for, simply
+    absent, because no regulation asked for it and no smart meters produce the
+    data — and yet it publishes more anonymously accessible operational data
+    than the mandated utilities do. The mandate produced consumer data. The GIS
+    department produced open data. Neither produced a developer programme.
+
+accessGate:
+  gate: self-serve
+  gateNuance: >-
+    "self-serve" understates it: the open surfaces require no signup at all.
+    There is no registration, no API key, no token, no application form, no
+    licence agreement, and no rate limit statement. There is equally no
+    documentation, no support channel for developers, no terms governing reuse
+    of the data, and no commitment to keep any endpoint alive.
+  whatADeveloperMustDo:
+    - >-
+      For outage data — nothing. Issue an anonymous HTTPS GET against
+      https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0/query?where=1=1&outFields=*&f=json
+      or a WFS GetCapabilities/GetFeature against the dservices2 host.
+    - >-
+      For reference geography — nothing. Query
+      https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer/0/query
+      anonymously.
+    - >-
+      For hydrological data — nothing, but you must discover the file layout
+      yourself. Start at
+      https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json for the
+      parameter index, then fetch <pid>.json per parameter and
+      stationdata.json for station metadata. A Referer header matching the
+      application was needed to get past the site's F5 web application firewall,
+      which intermittently answers HTTP 200 with a "Request Rejected" page.
+    - >-
+      For consumer usage data — there is no path. You would have to be the
+      customer and log in at https://account.hydro.mb.ca/Portal.
+  selfServe: true
+  accreditationRegime: >-
+    None exists. Unlike Australia's CDR there is no accredited data recipient
+    register, and unlike Ontario's Green Button there is not even a
+    utility-administered third-party vendor onboarding process.
+
+authModel:
+  scheme: >-
+    None on the open surfaces. Every verified endpoint answered an unauthenticated
+    request. The ArcGIS Online items are shared with access "public"; the ArcGIS
+    Server REST directory served an anonymous caller; the hydrological JSON files
+    are static and unauthenticated.
+  consumerAuth: >-
+    Username and password against the Smart Energy Water Smart Customer Mobile
+    portal at https://account.hydro.mb.ca/Portal. No OAuth, OpenID Connect,
+    mTLS, or delegated-consent flow is exposed to third parties.
+  openidConnectDiscovery: >-
+    Not served. https://www.hydro.mb.ca/.well-known/openid-configuration and
+    /.well-known/oauth-authorization-server both returned HTTP 404;
+    https://account.hydro.mb.ca/.well-known/openid-configuration and
+    /.well-known/oauth-authorization-server both returned HTTP 404 (IIS
+    "404 - File or directory not found.").
+  securityTxt: >-
+    Present and valid. https://www.hydro.mb.ca/.well-known/security.txt returns
+    HTTP 200 with Contact: mailto:website-security@hydro.mb.ca,
+    Preferred-Languages: en, fr, Canonical, and Expires: 2026-12-31T23:59:00.000Z,
+    wrapped in a large ASCII-art banner.
+
+downloadableContracts:
+  openapiFound: false
+  specsHarvested: 0
+  openapiDirectory: none
+  note: >-
+    No OpenAPI, Swagger, AsyncAPI, GraphQL schema, or Postman collection exists
+    anywhere on hydro.mb.ca, maps.hydro.mb.ca, or account.hydro.mb.ca.
+    /openapi.json and /swagger.json returned HTTP 404 on both www.hydro.mb.ca
+    and account.hydro.mb.ca; /api-docs returned HTTP 404. The only
+    machine-readable service contracts published are the OGC WFS 2.0.0
+    GetCapabilities documents and the ArcGIS REST ?f=json service and layer
+    metadata, both of which are live-generated by the hosting platform rather
+    than authored artifacts. Because neither is an OpenAPI-family document, no
+    openapi/ directory was created and nothing was saved — the live URLs are
+    recorded as APIReference properties in apis.yml instead.
+
+probes:
+  - url: https://www.hydro.mb.ca/
+    status: 200
+    note: >-
+      Corporate site. og:description "Manitoba's publicly owned electricity and
+      natural gas supplier." Title "Manitoba Hydro: Safe, affordable, reliable
+      energy."
+  - url: https://hydro.mb.ca/
+    status: 301
+    note: Apex issues HTTP 301 to https://www.hydro.mb.ca/ which then returns 200.
+  - url: https://developer.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://developers.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://api.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://docs.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://data.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://opendata.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://outages.hydro.mb.ca/
+    status: 0
+    note: DNS does not resolve.
+  - url: https://maps.hydro.mb.ca/
+    status: 403
+    note: 'IIS "403 - Forbidden: Access is denied." at the host root.'
+  - url: https://maps.hydro.mb.ca/arcgis/rest/services?f=json
+    status: 200
+    note: >-
+      ArcGIS Server 10.91 REST directory, anonymous. Folders ARL, ConTrack,
+      DISTAPPS, GDS, JUTA, LEA, Locators, ReferenceData, Utilities.
+  - url: https://maps.hydro.mb.ca/arcgis/rest/services/ReferenceData/MH_AdminBoundaries/FeatureServer?f=json
+    status: 200
+    note: >-
+      Layers MH_CustomerServiceCentres, MH_LocateAreas, MH_StationAreas.
+      Capabilities Query. Anonymous count query on layer 0 returned 19.
+  - url: https://account.hydro.mb.ca/Portal
+    status: 200
+    note: 'Customer login. Title "::Manitoba Hydro:: Login".'
+  - url: https://account.hydro.mb.ca/API/
+    status: 200
+    note: ASP.NET Web API landing page branded "SCM Service API". No operations listed.
+  - url: https://account.hydro.mb.ca/API/Help
+    status: 403
+    note: Help page blocked.
+  - url: https://account.hydro.mb.ca/openapi.json
+    status: 404
+  - url: https://account.hydro.mb.ca/swagger.json
+    status: 404
+  - url: https://account.hydro.mb.ca/.well-known/openid-configuration
+    status: 404
+  - url: https://account.hydro.mb.ca/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://www.hydro.mb.ca/developers
+    status: 404
+  - url: https://www.hydro.mb.ca/developer
+    status: 404
+  - url: https://www.hydro.mb.ca/api
+    status: 404
+  - url: https://www.hydro.mb.ca/api-docs
+    status: 404
+  - url: https://www.hydro.mb.ca/data
+    status: 404
+  - url: https://www.hydro.mb.ca/openapi.json
+    status: 404
+  - url: https://www.hydro.mb.ca/swagger.json
+    status: 404
+  - url: https://www.hydro.mb.ca/.well-known/openid-configuration
+    status: 404
+  - url: https://www.hydro.mb.ca/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://www.hydro.mb.ca/.well-known/security.txt
+    status: 200
+    note: Real security.txt with Contact, Preferred-Languages, Canonical, Expires.
+  - url: https://www.hydro.mb.ca/robots.txt
+    status: 200
+    note: >-
+      Disallows /careers/*, /docs/*, /errors/, /hydrologicalData/, /hydrox/,
+      /maintenance/. The hydrological data application is deliberately excluded
+      from indexing even though it is publicly documented and linked.
+  - url: https://www.hydro.mb.ca/sitemap.xml
+    status: 200
+    note: Sitemap index pointing to /en/sitemap.xml and /fr/sitemap.xml.
+  - url: https://www.hydro.mb.ca/en/sitemap.xml
+    status: 200
+    note: 880 URLs. No developer, API, or open-data page. "developer-choice-program" is a property-developer electrical connection programme, not software.
+  - url: https://www.hydro.mb.ca/corporate/open-data/
+    status: 404
+  - url: https://www.hydro.mb.ca/green-button/
+    status: 404
+  - url: https://www.hydro.mb.ca/account/energy-use/
+    status: 404
+  - url: https://www.hydro.mb.ca/electric-vehicles/
+    status: 404
+  - url: https://www.hydro.mb.ca/service/electric-vehicles/
+    status: 404
+  - url: https://www.hydro.mb.ca/environment/electric-vehicles/
+    status: 404
+  - url: https://www.hydro.mb.ca/corporate/
+    status: 200
+    note: >-
+      "a provincial Crown Corporation"; "632,117 electric customers, and 300,789
+      natural gas customers"; trades electricity in wholesale markets across the
+      Midwestern U.S. and Canada.
+  - url: https://www.hydro.mb.ca/outages/
+    status: 200
+  - url: https://www.hydro.mb.ca/outages/outage-map/
+    status: 200
+    note: >-
+      Consumer outage map landing page. Loads no third-party map vendor script
+      inline; no KUBRA, Esri, or ArcGIS reference in the page HTML or in
+      /assets/mht/js/mht.min.js.
+  - url: https://www.hydro.mb.ca/outages/planned/
+    status: 200
+  - url: https://www.hydro.mb.ca/account/
+    status: 200
+    note: Links to https://account.hydro.mb.ca/Portal. No data export, no Green Button.
+  - url: https://www.hydro.mb.ca/account/meters/
+    status: 200
+  - url: https://www.hydro.mb.ca/account/your-online-account/
+    status: 200
+  - url: https://www.hydro.mb.ca/articles/2022/04/advanced_metering_infrastructure/
+    status: 200
+    note: '"Manitoba doesn''t have AMI right now"; 2006-2009 pilot not continued.'
+  - url: https://www.hydro.mb.ca/corporate/operations/water-levels/
+    status: 200
+  - url: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
+    status: 200
+    note: >-
+      Documents the application at https://www.hydro.mb.ca/hydrologicalData/static/
+      and carries the preliminary-data disclaimer. No API or data service mentioned.
+  - url: https://www.hydro.mb.ca/hydrologicalData/static/
+    status: 200
+    note: KISTERS WISKI Web Public application shell (Copyright KISTERS AG).
+  - url: https://www.hydro.mb.ca/hydrologicalData/static/data/stationdata.json
+    status: 200
+    note: 169 gauging stations, 855 KB, parses as JSON.
+  - url: https://www.hydro.mb.ca/hydrologicalData/static/data/tsdata.json
+    status: 200
+    note: >-
+      15 parameter layers — Water Level, Water Temperature, Air Temperature,
+      Precipitation, wind speed/direction/gust/peak variants, Relative Humidity,
+      Atmospheric Pressure, Snow Depth.
+  - url: https://www.hydro.mb.ca/hydrologicalData/static/data/1.json
+    status: 200
+    note: >-
+      Water Level, 158 stations, readings from 2026-07-04 to 2026-07-27 03:35 —
+      current as of this review.
+  - url: https://www.hydro.mb.ca/hydrologicalData/static/data/3.json
+    status: 200
+    note: Air Temperature, 19 stations, current to 2026-07-27 03:00.
+  - url: https://www.hydro.mb.ca/hydrologicalData/data/stationdata.json
+    status: 200
+    note: >-
+      Older parallel tree, 10.6 MB, 154 stations. Its observation files are
+      frozen at February 2021. Recorded but NOT listed in apis.yml as the live
+      surface.
+  - url: https://www.hydro.mb.ca/hydrologicalData/KiWIS/KiWIS?service=kisters&type=queryServices&request=getrequestinfo
+    status: 200
+    note: >-
+      F5 "Request Rejected" HTML, not a KiWIS response. The KISTERS KiWIS REST
+      API is not exposed on this deployment.
+  - url: https://www.arcgis.com/sharing/rest/portals/QoeQkfdOG126FqSi?f=json
+    status: 200
+    note: >-
+      Portal name "Manitoba Hydro", urlKey "mbhydro", access public. Org
+      description identifies it as "a Crown Corporation and the province's major
+      energy utility."
+  - url: https://www.arcgis.com/sharing/rest/search?q=orgid:QoeQkfdOG126FqSi
+    status: 200
+    note: 216 publicly shared items across the organization.
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer?f=json
+    status: 200
+    note: Layer 0 "MH Current Power Outages", polygon, capabilities Query.
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Current_Power_Outages/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
+    note: '{"count":8} — anonymous, no token.'
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Manitoba_Hydro_Planned_Power_Outages/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
+    note: '{"count":48} — anonymous, no token.'
+  - url: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Current_Power_Outages_WFS/WFSServer?service=wfs&request=getcapabilities
+    status: 200
+    note: >-
+      wfs:WFS_Capabilities version="2.0.0", ows:Abstract "Current power outages
+      in Manitoba." The only formal machine-readable contract found.
+  - url: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Planned_Power_Outages_WFS/WFSServer
+    status: 200
+    note: Parallel WFS for planned outages (item 4cc075a46e574c15816b28b93a1f2de3).
+  - url: https://www.arcgis.com/sharing/rest/content/items/016914ea3b28449e8205e07c04a92d51?f=json
+    status: 200
+    note: >-
+      Owner dcarpenter@hydro.mb.ca, access public, licenseInfo null, description
+      "This data is updated every 5 minutes."
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Station_Locations/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
+    note: '{"count":512} — anonymous.'
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/Customer_Service_Centres/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
+    note: '{"count":19} — anonymous.'
+  - url: https://services2.arcgis.com/QoeQkfdOG126FqSi/arcgis/rest/services/MH_Vegetation_Management_Planned_Work_2026_view/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json
+    status: 200
+    note: '{"count":122} — anonymous.'
+  - url: https://mbhydro.maps.arcgis.com/
+    status: 200
+    note: Manitoba Hydro's ArcGIS Online organization home.
+  - url: https://mbhydro.opendata.arcgis.com/
+    status: 200
+    note: >-
+      Generic unbranded "ArcGIS Hub" SPA shell, 8 KB, no Manitoba Hydro content
+      rendered. NOT treated as a published open data portal.
+  - url: https://service-requests-mbhydro.hub.arcgis.com
+    status: 200
+    note: ArcGIS Hub site for residential pre-service requests — a form workflow, not data.
+  - url: https://land-management-mbhydro.hub.arcgis.com
+    status: 200
+    note: ArcGIS Hub site for land management — documents and forms, not data.
+  - url: https://github.com/manitobahydro
+    status: 404
+  - url: https://github.com/ManitobaHydro
+    status: 404
+  - url: https://www.linkedin.com/company/manitoba-hydro
+    status: 200
+  - url: https://www.greenbuttonalliance.org/canadian-initiatives
+    status: 200
+    note: >-
+      "We currently have no information about Green Button deployments in
+      Manitoba, New Brunswick, Newfoundland and Labrador, Prince Edward Island,
+      Quebec, or Saskatchewan."
+
+sources:
+  - url: https://www.hydro.mb.ca/corporate/
+    type: About
+    note: Crown corporation status and customer counts.
+  - url: https://www.hydro.mb.ca/articles/2022/04/advanced_metering_infrastructure/
+    type: Documentation
+    note: Primary evidence that Manitoba Hydro has no AMI deployment.
+  - url: https://www.hydro.mb.ca/corporate/operations/water-levels/hydrological-data/
+    type: Documentation
+    note: Documents the hydrological application, its data sources, and its disclaimer.
+  - url: https://www.arcgis.com/sharing/rest/portals/QoeQkfdOG126FqSi?f=json
+    type: APIReference
+    note: Proves the ArcGIS Online organization belongs to Manitoba Hydro.
+  - url: https://www.arcgis.com/sharing/rest/content/items/016914ea3b28449e8205e07c04a92d51?f=json
+    type: APIReference
+    note: Item ownership (dcarpenter@hydro.mb.ca), public sharing, 5-minute refresh.
+  - url: https://dservices2.arcgis.com/QoeQkfdOG126FqSi/arcgis/services/Manitoba_Hydro_Current_Power_Outages_WFS/WFSServer?service=wfs&request=getcapabilities
+    type: Standard
+    note: OGC WFS 2.0.0 capabilities document — the only machine-readable contract.
+  - url: https://www.greenbuttonalliance.org/canadian-initiatives
+    type: Standard
+    note: Authoritative statement that Manitoba has no known Green Button deployment.
+  - url: https://www.ontario.ca/laws/regulation/210633
+    type: Regulation
+    note: O. Reg. 633/21, cited only to establish that it binds Ontario distributors and not Manitoba Hydro.
+  - url: https://play.google.com/store/apps/details?id=com.sew.manitoba
+    type: Documentation
+    note: Package identifier identifies the customer platform as Smart Energy Water Smart Customer Mobile.
+
+findings:
+  summary: >-
+    Manitoba Hydro is the control case for the whole energy sector question. It
+    proves that a mandate is not an implementation by removing the mandate
+    entirely and watching what a utility does anyway. What it does is publish no
+    consumer data API of any kind — not gated, not applied-for, simply absent,
+    because Manitoba never legislated a consumer energy data right and Manitoba
+    Hydro never deployed the smart meters that would generate the data — while
+    simultaneously running the most anonymously accessible operational data
+    surface of any Canadian utility reviewed. Current and planned outages,
+    station locations, service centre boundaries and vegetation work are all
+    queryable with no key over ArcGIS REST and OGC WFS 2.0.0, refreshed every
+    five minutes; a hydrological monitoring application serves same-day water
+    level readings for 158 gauging stations as plain JSON. None of it is called
+    an API. None of it is documented, licensed, versioned, or supported. It
+    exists because a GIS team shared its layers publicly and a hydrology team
+    put a KISTERS viewer on the web, not because anyone decided to run a
+    developer programme. The finding is that in an unmandated market the open
+    data appears anyway — just on the grid side, never on the customer side, and
+    always as a by-product rather than a product.
+  posture: unmandated-closed-consumer-data-open-undocumented-grid-data
+  gated: false
+  openapiHarvested: false
+  developerPortal: none
