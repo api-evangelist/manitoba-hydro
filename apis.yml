@@ -29,6 +29,17 @@ description: >-
   There is no developer portal, no API keys, no OpenAPI, and no terms of use for
   data reuse — the open surface exists as a by-product of public map publishing
   rather than as an API program.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: self-serve
