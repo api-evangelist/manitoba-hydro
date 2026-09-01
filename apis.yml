@@ -107,7 +107,7 @@ apis:
     url: https://www.hydro.mb.ca/outages/outage-map/
   - type: Standard
     url: https://www.ogc.org/standards/wfs/
-  - type: APIReference
+  - type: GetCapabilities
     name: OGC WFS 2.0.0 GetCapabilities (captured verbatim 2026-07-27)
     url: wfs/manitoba-hydro-current-power-outages-wfs-capabilities.xml
   - type: APIReference
@@ -156,7 +156,7 @@ apis:
     url: https://www.hydro.mb.ca/outages/planned/
   - type: Standard
     url: https://www.ogc.org/standards/wfs/
-  - type: APIReference
+  - type: GetCapabilities
     name: OGC WFS 2.0.0 GetCapabilities (captured verbatim 2026-07-27)
     url: wfs/manitoba-hydro-planned-power-outages-wfs-capabilities.xml
   - type: APIReference
