@@ -1,25 +1,23 @@
-# Kin Score artifact — manitoba-hydro — 2026-08-25T133943
+# Kin Score artifact — manitoba-hydro — 2026-10-03T000835
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: manitoba-hydro
-  schema_version: 0.14.0
-  scored_at: '2026-08-25'
-  run_ts: 2026-08-25T133943
-  composite: 32.5
+  schema_version: 0.23.0
+  scored_at: '2026-10-03'
+  run_ts: 2026-10-03T000835
+  composite: 34.1
   band: thin
   facets:
-    discoverability: 85.2
-    contract_quality: 20.0
-    governance: 18.2
-    operational_transparency: 10.5
-    developer_ergonomics: 28.6
-    commercial_clarity: 34.2
+    discoverability: 71.4
+    contract_quality: 23.9
     contract_governance: 18.2
+    operational_transparency: 10.5
+    developer_ergonomics: 45.2
     access_clarity: 34.2
   agent_readiness:
-    score: 8.8
-    band: agent-aware
+    score: 4.5
+    band: human-only
     dimensions:
       spec_presence: false
       agentic_access: false
@@ -27,13 +25,13 @@ kin_score:
       mcp_server: false
       auth_clarity: bearer
       idempotency: false
-      error_semantics: documented
+      error_semantics: derived
       openapi_examples: documented
       rate_limit_signal: false
       event_surface_described: false
       agent_skills: false
       well_known_catalog: false
-      consent_identity: true
+      consent_identity: false
       agent_card: false
       dry_run_mode: false
       delegated_identity: false
@@ -44,7 +42,7 @@ kin_score:
     applies: true
     regime: Energy & Utilities
     regime_id: energy_utilities
-    score: 38.5
+    score: 23.4
     matched_via: tags
   provenance:
     conformance: first-party
